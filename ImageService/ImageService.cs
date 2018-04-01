@@ -5,10 +5,16 @@ using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices;
+using ImageService.Server;
+using ImageService.Controller;
+using ImageService.Modal;
 using ImageService.Logging;
+using ImageService.Logging.Modal;
+using System.Configuration;
+using ImageService.Infrastructure;
 
 
 namespace ImageService
@@ -38,9 +44,9 @@ namespace ImageService
 
     public partial class ImageService : ServiceBase
     {
-        //private ImageServer m_imageServer;          // The Image Server
-       // private IImageServiceModal modal;
-       // private IImageController controller;
+        private ImageServer m_imageServer;          // The Image Server
+        private IImageServiceModal modal;
+        private IImageController controller;
         private ILoggingService logging;
 
         private int eventId = 1;
@@ -72,12 +78,16 @@ namespace ImageService
         // Here You will Use the App Config!
         protected override void OnStart(string[] args)
         {
+            logging = new LoggingService();
+            m_imageServer = new ImageServer(logging);
+            logging.Log("In OnStart", 0);
+            logging.MessageRecieved += onMsg;
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-            eventLog1.WriteEntry("In OnStart");
+            /*eventLog1.WriteEntry("In OnStart");*/
             // Set up a timer to trigger every minute.  
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 60000; // 60 seconds  
@@ -110,6 +120,11 @@ namespace ImageService
         protected override void OnContinue()
         {
             eventLog1.WriteEntry("In OnContinue.");
+        }
+
+        private void onMsg(object o, MessageRecievedEventArgs msg)
+        {
+            eventLog1.WriteEntry(msg.Message);
         }
     }
 }

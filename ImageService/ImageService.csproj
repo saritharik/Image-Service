@@ -38,6 +38,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -48,12 +49,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandEnum.cs" />
+    <Compile Include="CommandRecievedEventArgs.cs" />
+    <Compile Include="DirectoryCloseEventArgs.cs" />
+    <Compile Include="DirectoyHandler.cs" />
+    <Compile Include="ICommand.cs" />
+    <Compile Include="IDirectoryHandler.cs" />
+    <Compile Include="IImageController.cs" />
+    <Compile Include="IImageServiceModal.cs" />
+    <Compile Include="ILoggingService.cs" />
+    <Compile Include="ImageController.cs" />
+    <Compile Include="ImageServer.cs" />
     <Compile Include="ImageService.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="ImageService.Designer.cs">
       <DependentUpon>ImageService.cs</DependentUpon>
     </Compile>
+    <Compile Include="ImageServiceModal.cs" />
+    <Compile Include="LoggingService.cs" />
+    <Compile Include="MessageRecievedEventArgs.cs" />
+    <Compile Include="MessageTypeEnum.cs" />
+    <Compile Include="NewFileCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
