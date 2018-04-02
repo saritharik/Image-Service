@@ -55,7 +55,12 @@ namespace ImageService.Modal
 
         private void movePicture(string path, DateTime dateTime)
         {
-            File.Move(path, m_OutputFolder);
+            int year = dateTime.Year;
+            int month = dateTime.Month;
+            string fileName = Path.GetFileName(path);
+            Directory.CreateDirectory(m_OutputFolder + "\\" + year);
+            Directory.CreateDirectory(m_OutputFolder + "\\" + year + "\\" + month);
+            File.Move(path, m_OutputFolder + "\\" + year + "\\" + month + "\\" + fileName);
         }
 
     }
