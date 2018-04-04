@@ -24,11 +24,17 @@ namespace ImageService.Modal
 
         public string AddFile(string path, out bool result)
         {
-            string res = "true"; //////////
             result = true; ///////////////
-            createFolder();
-            DateTime dateTime = getDateFromImage(path);
-            movePicture(path, dateTime);
+            String res;
+            try
+            {
+                createFolder();
+                DateTime dateTime = getDateFromImage(path);
+                res = movePicture(path, dateTime);
+            } catch (Exception e)
+            {
+                res = e.ToString();
+            }
 
             return res;
 
@@ -39,6 +45,7 @@ namespace ImageService.Modal
             if (!Directory.Exists(m_OutputFolder))
             {
                 Directory.CreateDirectory(m_OutputFolder);
+                Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails");
             }
         }
 
@@ -53,7 +60,7 @@ namespace ImageService.Modal
             }
         }
 
-        private void movePicture(string path, DateTime dateTime)
+        private String movePicture(string path, DateTime dateTime)
         {
             int year = dateTime.Year;
             int month = dateTime.Month;
@@ -61,7 +68,18 @@ namespace ImageService.Modal
             Directory.CreateDirectory(m_OutputFolder + "\\" + year);
             Directory.CreateDirectory(m_OutputFolder + "\\" + year + "\\" + month);
             File.Move(path, m_OutputFolder + "\\" + year + "\\" + month + "\\" + fileName);
+            Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails" + "\\" + year);
+            Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails" + "\\" + year + "\\" + month);
+            createThumbnails(m_OutputFolder + "\\" + year + "\\" + month + "\\" + fileName,
+                m_OutputFolder + "\\" + "Thumbnails" + "\\" + year + "\\" + month + "\\" + fileName);
+            return m_OutputFolder + "\\" + year + "\\" + month + "\\" + fileName;
         }
 
+        private void createThumbnails(string fileName, string path)
+        {
+            Image image = Image.FromFile(fileName);
+            Image thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
+            thumb.Save(Path.ChangeExtension(path, "thumb"));
+        }
     }
 }
