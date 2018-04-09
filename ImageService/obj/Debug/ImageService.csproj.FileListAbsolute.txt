@@ -15,3 +15,6 @@ C:\Users\User\source\repos\Image-Service\ImageService\obj\Debug\ImageService.csp
 C:\Users\User\source\repos\Image-Service\ImageService\obj\Debug\ImageService.csproj.CoreCompileInputs.cache
 C:\Users\User\source\repos\Image-Service\ImageService\obj\Debug\ImageService.exe
 C:\Users\User\source\repos\Image-Service\ImageService\obj\Debug\ImageService.pdb
+C:\Users\User\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe.config
+C:\Users\User\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe
+C:\Users\User\source\repos\Image-Service\ImageService\bin\Debug\ImageService.pdb

@@ -8,9 +8,18 @@ namespace ImageService.Modal
 {
     public class DirectoryCloseEventArgs : EventArgs
     {
-        public string DirectoryPath { get; set; }
+        public string DirectoryPath
+        {
+            get { return DirectoryPath; }
+            set { DirectoryPath = value; }
+        }
 
-        public string Message { get; set; }             // The Message That goes to the logger
+        // The Message That goes to the logger
+        public string Message
+        {
+            get { return Message; }
+            set { Message = value; }
+        }             
 
         public DirectoryCloseEventArgs(string dirPath, string message)
         {

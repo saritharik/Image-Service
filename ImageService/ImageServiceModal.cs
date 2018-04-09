@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace ImageService.Modal
 {
@@ -22,9 +23,14 @@ namespace ImageService.Modal
 
         #endregion
 
+        public ImageServiceModal()
+        {
+            m_OutputFolder = ConfigurationManager.AppSettings["OutputDir"];
+            m_thumbnailSize = int.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
+        }
         public string AddFile(string path, out bool result)
         {
-            result = true; ///////////////
+            result = true;
             String res;
             try
             {
@@ -34,6 +40,7 @@ namespace ImageService.Modal
             } catch (Exception e)
             {
                 res = e.ToString();
+                result = false;
             }
 
             return res;
@@ -42,11 +49,8 @@ namespace ImageService.Modal
 
         private void createFolder()
         {
-            if (!Directory.Exists(m_OutputFolder))
-            {
-                Directory.CreateDirectory(m_OutputFolder);
-                Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails");
-            }
+            Directory.CreateDirectory(m_OutputFolder);
+            Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails"); 
         }
 
         private static DateTime getDateFromImage(string path)
@@ -78,7 +82,7 @@ namespace ImageService.Modal
         private void createThumbnails(string fileName, string path)
         {
             Image image = Image.FromFile(fileName);
-            Image thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
+            Image thumb = image.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
             thumb.Save(Path.ChangeExtension(path, "thumb"));
         }
     }

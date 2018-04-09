@@ -8,18 +8,15 @@ namespace ImageService.Logging.Modal
 {
     public class MessageRecievedEventArgs : EventArgs
     {
-        private MessageTypeEnum status;
-        private string message;
-
         public MessageTypeEnum Status
         {
-            get { return status; }
-            set { status = value; }
+            get { return Status; }
+            set { Status = value; }
         }
         public string Message
         {
-            get { return message; }
-            set { message = value; }
+            get { return Message; }
+            set { Message = value; }
         }
     }
 }

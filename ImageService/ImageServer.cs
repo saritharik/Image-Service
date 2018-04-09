@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Configuration;
 
 namespace ImageService.Server
 {
@@ -16,14 +17,20 @@ namespace ImageService.Server
         #region Members
         private IImageController m_controller;
         private ILoggingService m_logging;
-        private Dictionary<String, CommandRecievedEventArgs> commands;
+        //private Dictionary<String, CommandRecievedEventArgs> commands;
         #endregion
         public ImageServer(ILoggingService logging)
         {
             m_logging = logging;
             IImageServiceModal imageServiceModal = new ImageServiceModal();
             m_controller = new ImageController(imageServiceModal);
-            commands = new Dictionary<String, CommandRecievedEventArgs>();
+            string directories = ConfigurationManager.AppSettings["Handler"];
+            string[] pathes = directories.Split(';');
+            foreach (string path in pathes)
+            {
+                createHandler(path);
+            }
+            
         }
         #region Properties
         public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
@@ -31,15 +38,17 @@ namespace ImageService.Server
 
         public void createHandler(String directory)
         {
-            IDirectoryHandler directoryHandler = new DirectoyHandler(directory, m_controller);
+            IDirectoryHandler directoryHandler = new DirectoyHandler(directory, m_controller, m_logging);
             CommandRecieved += directoryHandler.OnCommandRecieved;
             directoryHandler.DirectoryClose += onCloseServer;
         }
 
-        /*public void sendCommand()
+        public void sendCommand()
         {
-            CommandRecieved("*", CloseHandler);
-        }*/
+            CommandRecievedEventArgs eventArgs = 
+                new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null);
+            CommandRecieved.Invoke(this, eventArgs);
+        }
 
         public void onCloseServer(Object sender, DirectoryCloseEventArgs commandRecieved)
         {

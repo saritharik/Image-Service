@@ -22,24 +22,53 @@ namespace ImageService.Controller.Handlers
         private string m_path;                              // The Path of directory
         #endregion
 
-        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;              // The Event That Notifies that the Directory is being closed
+        // The Event That Notifies that the Directory is being closed
+        public event EventHandler<DirectoryCloseEventArgs> DirectoryClose;
 
         // Implement Here!
-        public DirectoyHandler(String directory, IImageController controller)
+        public DirectoyHandler(String directory, IImageController controller, ILoggingService logging)
         {
             m_controller = controller;
             m_path = directory;
+            m_logging = logging;
         }
         // The Function Recieves the directory to Handle
         public void StartHandleDirectory(string dirPath)
         {
-           // m_dirWatcher = new FileSystemWatcher(dirPath, "*.jpg");
+            m_dirWatcher = new FileSystemWatcher(dirPath);
+            m_dirWatcher.BeginInit();
+            m_dirWatcher.Changed += new FileSystemEventHandler(OnChanged);
         }
 
         // The Event that will be activated upon new Command
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
+            if(e.RequestDirPath.Equals(m_path))
+            {
+                if (e.CommandID == (int)CommandEnum.CloseCommand)
+                {
+                    OnClose();
+                }
+            } 
+        }
+        
+        private void OnChanged(object source, FileSystemEventArgs e)
+        {
+            string extention = Path.GetExtension(e.FullPath);
+            if(extention.Equals(".jpg") || extention.Equals(".png") ||
+                extention.Equals(".gif") || extention.Equals(".bmp"))
+            {
+                string[] args = new string[1];
+                args[0] = m_path;
+                m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, args, out bool resultSuccesful);
+            }
+        }
 
+        private void OnClose()
+        {
+            m_dirWatcher.Dispose();
+            DirectoryCloseEventArgs directoryClose = new DirectoryCloseEventArgs(m_path, "Close handler");
+            DirectoryClose.Invoke(this, directoryClose);
         }
             
     }

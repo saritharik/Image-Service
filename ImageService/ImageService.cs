@@ -45,8 +45,8 @@ namespace ImageService
     public partial class ImageService : ServiceBase
     {
         private ImageServer m_imageServer;          // The Image Server
-        private IImageServiceModal modal;
-        private IImageController controller;
+        //private IImageServiceModal modal;
+        //private IImageController controller;
         private ILoggingService logging;
 
         private int eventId = 1;
@@ -56,8 +56,8 @@ namespace ImageService
         public ImageService(string[] args)
         {
             InitializeComponent();
-            string eventSourceName = "MySource";
-            string logName = "MyNewLog";
+            string eventSourceName = ConfigurationManager.AppSettings["SourceName"];
+            string logName = ConfigurationManager.AppSettings["LogName"];
             if (args.Count() > 0)
             {
                 eventSourceName = args[0];
@@ -80,14 +80,13 @@ namespace ImageService
         {
             logging = new LoggingService();
             m_imageServer = new ImageServer(logging);
-            logging.Log("In OnStart", 0);
             logging.MessageRecieved += onMsg;
+            logging.Log("In OnStart", MessageTypeEnum.INFO);
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-            /*eventLog1.WriteEntry("In OnStart");*/
             // Set up a timer to trigger every minute.  
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 60000; // 60 seconds  
