@@ -36,8 +36,10 @@ namespace ImageService.Controller.Handlers
         public void StartHandleDirectory(string dirPath)
         {
             m_dirWatcher = new FileSystemWatcher(dirPath);
-            m_dirWatcher.BeginInit();
+            //m_dirWatcher.BeginInit();
+            m_dirWatcher.EnableRaisingEvents = true;
             m_dirWatcher.Changed += new FileSystemEventHandler(OnChanged);
+            m_dirWatcher.Created += new FileSystemEventHandler(OnChanged);
         }
 
         // The Event that will be activated upon new Command
