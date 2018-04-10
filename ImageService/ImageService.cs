@@ -73,15 +73,16 @@ namespace ImageService
             }
             eventLog1.Source = eventSourceName;
             eventLog1.Log = logName;
+            logging = new LoggingService();
+            logging.MessageRecieved += onMsg;
+            m_imageServer = new ImageServer(logging);
         }
 
         // Here You will Use the App Config!
         protected override void OnStart(string[] args)
         {
-            logging = new LoggingService();
-            m_imageServer = new ImageServer(logging);
-            logging.MessageRecieved += onMsg;
-            logging.Log("In OnStart", MessageTypeEnum.INFO);
+            
+            ////logging.Log("In OnStart", MessageTypeEnum.INFO);
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
@@ -95,10 +96,12 @@ namespace ImageService
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            logging.Log("In OnStart", MessageTypeEnum.INFO);
         }
 
         protected override void OnStop()
         {
+            //m_imageServer.sendCommand();
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
@@ -121,7 +124,7 @@ namespace ImageService
             eventLog1.WriteEntry("In OnContinue.");
         }
 
-        private void onMsg(object o, MessageRecievedEventArgs msg)
+        public void onMsg(object o, MessageRecievedEventArgs msg)
         {
             eventLog1.WriteEntry(msg.Message);
         }

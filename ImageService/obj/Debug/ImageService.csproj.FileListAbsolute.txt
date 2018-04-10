@@ -18,3 +18,13 @@ C:\Users\User\source\repos\Image-Service\ImageService\obj\Debug\ImageService.pdb
 C:\Users\User\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe.config
 C:\Users\User\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe
 C:\Users\User\source\repos\Image-Service\ImageService\bin\Debug\ImageService.pdb
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\ImageService.exe.config
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\ImageService.exe
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\ImageService.pdb
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.csprojResolveAssemblyReference.cache
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.ImageService.resources
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.ProjectInstaller.resources
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.csproj.GenerateResource.cache
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.csproj.CoreCompileInputs.cache
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.exe
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.pdb

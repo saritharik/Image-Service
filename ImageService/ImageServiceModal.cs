@@ -62,6 +62,7 @@ namespace ImageService.Modal
                 string dateTaken = r.Replace(Encoding.UTF8.GetString(propItem.Value), "-", 2);
                 return DateTime.Parse(dateTaken);
             }
+
         }
 
         private String movePicture(string path, DateTime dateTime)

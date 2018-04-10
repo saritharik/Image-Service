@@ -36,7 +36,6 @@ namespace ImageService.Controller.Handlers
         public void StartHandleDirectory(string dirPath)
         {
             m_dirWatcher = new FileSystemWatcher(dirPath);
-            //m_dirWatcher.BeginInit();
             m_dirWatcher.EnableRaisingEvents = true;
             m_dirWatcher.Changed += new FileSystemEventHandler(OnChanged);
             m_dirWatcher.Created += new FileSystemEventHandler(OnChanged);
@@ -61,7 +60,7 @@ namespace ImageService.Controller.Handlers
                 extention.Equals(".gif") || extention.Equals(".bmp"))
             {
                 string[] args = new string[1];
-                args[0] = m_path;
+                args[0] = e.FullPath;
                 m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, args, out bool resultSuccesful);
             }
         }
