@@ -10,6 +10,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Configuration;
+using ImageService.Logging;
+using ImageService.Logging.Modal;
 
 namespace ImageService.Modal
 {
@@ -18,13 +20,15 @@ namespace ImageService.Modal
         #region Members
         private string m_OutputFolder;            // The Output Folder
         private int m_thumbnailSize;              // The Size Of The Thumbnail Size
+        private ILoggingService m_logging;
 
         private static Regex r = new Regex(":");
 
         #endregion
 
-        public ImageServiceModal()
+        public ImageServiceModal(ILoggingService logging)
         {
+            m_logging = logging;
             m_OutputFolder = ConfigurationManager.AppSettings["OutputDir"];
             m_thumbnailSize = int.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
         }
@@ -35,10 +39,14 @@ namespace ImageService.Modal
             try
             {
                 createFolder();
+                m_logging.Log("Folder create successfully", MessageTypeEnum.INFO);
                 DateTime dateTime = getDateFromImage(path);
+                m_logging.Log("Get date time successfully", MessageTypeEnum.INFO);
                 res = movePicture(path, dateTime);
+                m_logging.Log("Picture move successfully", MessageTypeEnum.INFO);
             } catch (Exception e)
             {
+                m_logging.Log("Move picture fail", MessageTypeEnum.FAIL);
                 res = e.ToString();
                 result = false;
             }
@@ -67,11 +75,19 @@ namespace ImageService.Modal
 
         private String movePicture(string path, DateTime dateTime)
         {
+            int i = 1;
             int year = dateTime.Year;
             int month = dateTime.Month;
-            string fileName = Path.GetFileName(path);
             Directory.CreateDirectory(m_OutputFolder + "\\" + year);
             Directory.CreateDirectory(m_OutputFolder + "\\" + year + "\\" + month);
+            while (File.Exists(m_OutputFolder + "\\" + year + "\\" + month + "\\" + Path.GetFileName(path))) {
+                string newName = Path.GetFileNameWithoutExtension(path);
+                string newPath = path.Replace(newName, newName + "(" + i + ")");
+                File.Move(path, newPath);
+                path = newPath;
+                i++;
+            }
+            string fileName = Path.GetFileName(path);
             File.Move(path, m_OutputFolder + "\\" + year + "\\" + month + "\\" + fileName);
             Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails" + "\\" + year);
             Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails" + "\\" + year + "\\" + month);

@@ -44,13 +44,13 @@ namespace ImageService.Controller.Handlers
         // The Event that will be activated upon new Command
         public void OnCommandRecieved(object sender, CommandRecievedEventArgs e)
         {
-            if(e.RequestDirPath.Equals(m_path))
-            {
+            //if(e.RequestDirPath.Equals(m_path))
+            //{
                 if (e.CommandID == (int)CommandEnum.CloseCommand)
                 {
                     OnClose();
                 }
-            } 
+            //} 
         }
         
         private void OnChanged(object source, FileSystemEventArgs e)
@@ -62,14 +62,22 @@ namespace ImageService.Controller.Handlers
                 string[] args = new string[1];
                 args[0] = e.FullPath;
                 m_controller.ExecuteCommand((int)CommandEnum.NewFileCommand, args, out bool resultSuccesful);
+                if (resultSuccesful)
+                {
+                    m_logging.Log("Picture passed successfully", MessageTypeEnum.INFO);
+                } else
+                {
+                    m_logging.Log("Picture passed failed", MessageTypeEnum.FAIL);
+                }
             }
         }
 
         private void OnClose()
         {
+            m_dirWatcher.EnableRaisingEvents = false;
             m_dirWatcher.Dispose();
             DirectoryCloseEventArgs directoryClose = new DirectoryCloseEventArgs(m_path, "Close handler");
-            DirectoryClose.Invoke(this, directoryClose);
+            DirectoryClose?.Invoke(this, directoryClose);
         }
             
     }

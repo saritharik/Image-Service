@@ -10,13 +10,13 @@ namespace ImageService.Logging.Modal
     {
         public MessageTypeEnum Status
         {
-            get { return Status; }
-            set { Status = value; }
+            get /*{ return Status; }*/;
+            set /*{ Status = value; }*/;
         }
         public string Message
         {
-            get { return Message; }
-            set { Message = value; }
+            get /*{ return Message; }*/;
+            set /*{ Message = value; }*/;
         }
 
         public MessageRecievedEventArgs(MessageTypeEnum status, string message)

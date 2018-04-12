@@ -11,21 +11,21 @@ namespace ImageService.Modal
         // The Command ID
         public int CommandID
         {
-            get { return CommandID; }
-            set { CommandID = value; }
+            get /*{ return CommandID; }*/;
+            set /*{ CommandID = value; }*/;
         }
 
         public string[] Args
         {
-            get { return Args; }
-            set { Args = value; }
+            get /*{ return Args; }*/;
+            set /*{ Args = value; }*/;
         }
 
         // The Request Directory
         public string RequestDirPath
         {
-            get { return RequestDirPath; }
-            set { RequestDirPath = value; }
+            get /*{ return RequestDirPath; }*/;
+            set /*{ RequestDirPath = value; }*/;
         }  
 
         public CommandRecievedEventArgs(int id, string[] args, string path)

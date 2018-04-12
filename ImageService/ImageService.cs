@@ -45,8 +45,6 @@ namespace ImageService
     public partial class ImageService : ServiceBase
     {
         private ImageServer m_imageServer;          // The Image Server
-        //private IImageServiceModal modal;
-        //private IImageController controller;
         private ILoggingService logging;
 
         private int eventId = 1;
@@ -81,13 +79,12 @@ namespace ImageService
         // Here You will Use the App Config!
         protected override void OnStart(string[] args)
         {
-            
-            ////logging.Log("In OnStart", MessageTypeEnum.INFO);
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
             serviceStatus.dwWaitHint = 100000;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            eventLog1.WriteEntry("In OnStart");
             // Set up a timer to trigger every minute.  
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 60000; // 60 seconds  
@@ -96,12 +93,11 @@ namespace ImageService
             // Update the service state to Running.  
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-            logging.Log("In OnStart", MessageTypeEnum.INFO);
         }
 
         protected override void OnStop()
         {
-            //m_imageServer.sendCommand();
+            m_imageServer.sendCommand();
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;

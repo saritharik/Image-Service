@@ -10,15 +10,15 @@ namespace ImageService.Modal
     {
         public string DirectoryPath
         {
-            get { return DirectoryPath; }
-            set { DirectoryPath = value; }
+            get /*{ return DirectoryPath; }*/;
+            set /*{ DirectoryPath = value; }*/;
         }
 
         // The Message That goes to the logger
         public string Message
         {
-            get { return Message; }
-            set { Message = value; }
+            get /*{ return Message; }*/;
+            set /*{ Message = value; }*/;
         }             
 
         public DirectoryCloseEventArgs(string dirPath, string message)

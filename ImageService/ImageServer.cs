@@ -22,7 +22,7 @@ namespace ImageService.Server
         public ImageServer(ILoggingService logging)
         {
             m_logging = logging;
-            IImageServiceModal imageServiceModal = new ImageServiceModal();
+            IImageServiceModal imageServiceModal = new ImageServiceModal(logging);
             m_controller = new ImageController(imageServiceModal);
             string directories = ConfigurationManager.AppSettings["Handler"];
             string[] pathes = directories.Split(';');
@@ -48,7 +48,7 @@ namespace ImageService.Server
         {
             CommandRecievedEventArgs eventArgs = 
                 new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null);
-            CommandRecieved.Invoke(this, eventArgs);
+            CommandRecieved?.Invoke(this, eventArgs);
         }
 
         public void onCloseServer(Object sender, DirectoryCloseEventArgs commandRecieved)
