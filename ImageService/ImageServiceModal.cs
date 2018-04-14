@@ -26,41 +26,65 @@ namespace ImageService.Modal
 
         #endregion
 
+         /// <summary>
+         /// Constructor.
+         /// defines the members according to the app settings file.
+         /// </summary>
+         /// <param name="logging"> get a logger to update it the actions
         public ImageServiceModal(ILoggingService logging)
         {
             m_logging = logging;
             m_OutputFolder = ConfigurationManager.AppSettings["OutputDir"];
             m_thumbnailSize = int.Parse(ConfigurationManager.AppSettings["ThumbnailSize"]);
         }
+
+        /// <summary>
+        /// This function called when a new picture is in the folder.
+        /// </summary>
+        /// <param name="path"> get the path of the file and move it to the right directory.
+        /// <param name="result"> out value to update success or fail.
+        /// <returns> return the new path of the picture.
         public string AddFile(string path, out bool result)
         {
             result = true;
             String res;
             try
             {
+                // create the dest folder
                 createFolder();
                 m_logging.Log("Folder create successfully", MessageTypeEnum.INFO);
                 DateTime dateTime = getDateFromImage(path);
                 m_logging.Log("Get date time successfully", MessageTypeEnum.INFO);
+                // move the picture to the dest folder
                 res = movePicture(path, dateTime);
                 m_logging.Log("Picture move successfully", MessageTypeEnum.INFO);
             } catch (Exception e)
             {
+                // If an error occurred while moving the image - update the logger
                 m_logging.Log("Move picture fail", MessageTypeEnum.FAIL);
                 res = e.ToString();
                 result = false;
             }
-
+            // return true- success or false- failed
             return res;
 
         }
 
+        /// <summary>
+        /// If the required folder doesn't exist- create new one.
+        /// </summary>
         private void createFolder()
         {
-            Directory.CreateDirectory(m_OutputFolder);
+            DirectoryInfo di = Directory.CreateDirectory(m_OutputFolder);
+            di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
             Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails"); 
         }
 
+        /// <summary>
+        /// If the required folder doesn't exist- create new one.
+        /// </summary>
+        /// <param name="path"> get the path of the folder.
+        /// <returns> return the date and time of the picture in the path
         private static DateTime getDateFromImage(string path)
         {
             using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read))

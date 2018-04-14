@@ -28,6 +28,12 @@ namespace ImageService.Modal
             set /*{ RequestDirPath = value; }*/;
         }  
 
+        /// <summary>
+        /// The properties of the command that recieved.
+        /// </summary>
+        /// <param name="id"></param> the identifier number
+        /// <param name="args"></param> the command
+        /// <param name="path"></param> the required path for the command
         public CommandRecievedEventArgs(int id, string[] args, string path)
         {
             CommandID = id;
