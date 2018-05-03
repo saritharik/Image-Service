@@ -21,6 +21,11 @@ namespace ImageService.Modal
             set /*{ Message = value; }*/;
         }             
 
+        /// <summary>
+        /// Arguments for the directory close event
+        /// </summary>
+        /// <param name="dirPath"></param> the path of the folder
+        /// <param name="message"></param> a message to the logger
         public DirectoryCloseEventArgs(string dirPath, string message)
         {
             DirectoryPath = dirPath;                    // Setting the Directory Name

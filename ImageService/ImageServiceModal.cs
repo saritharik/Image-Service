@@ -97,6 +97,12 @@ namespace ImageService.Modal
 
         }
 
+        /// <summary>
+        /// Move the picture to the required path
+        /// </summary>
+        /// <param name="path"></param> the destination path
+        /// <param name="dateTime"></param> the date and time of the creation of the picture.
+        /// <returns></returns> return the new path if the move succeed, and error message otherwise.
         private String movePicture(string path, DateTime dateTime)
         {
             int i = 1;
@@ -120,11 +126,16 @@ namespace ImageService.Modal
             return m_OutputFolder + "\\" + year + "\\" + month + "\\" + fileName;
         }
 
+        /// <summary>
+        /// Craete a thumbnail copy of the picture.
+        /// </summary>
+        /// <param name="fileName"></param> the name of the picture
+        /// <param name="path"></param> the path of the picture
         private void createThumbnails(string fileName, string path)
         {
             Image image = Image.FromFile(fileName);
             Image thumb = image.GetThumbnailImage(m_thumbnailSize, m_thumbnailSize, () => false, IntPtr.Zero);
-            thumb.Save(Path.ChangeExtension(path, "thumb"));
+            thumb.Save(path);
         }
     }
 }

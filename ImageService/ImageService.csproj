@@ -58,7 +58,7 @@
     <Compile Include="IDirectoryHandler.cs" />
     <Compile Include="IImageController.cs" />
     <Compile Include="IImageServiceModal.cs" />
-    <Compile Include="ILoggingService.cs" />
+    <Compile Include="ImageService.Logging\ILoggingService.cs" />
     <Compile Include="ImageController.cs" />
     <Compile Include="ImageServer.cs" />
     <Compile Include="ImageService.cs">
@@ -68,9 +68,9 @@
       <DependentUpon>ImageService.cs</DependentUpon>
     </Compile>
     <Compile Include="ImageServiceModal.cs" />
-    <Compile Include="LoggingService.cs" />
-    <Compile Include="MessageRecievedEventArgs.cs" />
-    <Compile Include="MessageTypeEnum.cs" />
+    <Compile Include="ImageService.Logging\LoggingService.cs" />
+    <Compile Include="ImageService.Logging\Modal\MessageRecievedEventArgs.cs" />
+    <Compile Include="ImageService.Logging\Modal\MessageTypeEnum.cs" />
     <Compile Include="NewFileCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
@@ -91,6 +91,9 @@
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ImageService.communication\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
