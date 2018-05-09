@@ -19,7 +19,7 @@ namespace ImageServiceGUI.Views
     /// <summary>
     /// Interaction logic for LogView.xaml
     /// </summary>
-    public partial class LogView : Page
+    public partial class LogView : UserControl
     {
         public LogView()
         {
