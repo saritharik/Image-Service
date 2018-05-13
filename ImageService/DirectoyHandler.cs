@@ -66,7 +66,10 @@ namespace ImageService.Controller.Handlers
             // the case that the command is 'close'.
                 if (e.CommandID == (int)CommandEnum.CloseCommand)
                 {
-                    OnClose();
+                    if (e.RequestDirPath == m_path || e.RequestDirPath == null)
+                    {
+                        OnClose();
+                    }
                 }
         }
         

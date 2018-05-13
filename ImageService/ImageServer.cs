@@ -56,10 +56,8 @@ namespace ImageService.Server
         /// <summary>
         /// Send a command to the handlers, by invoke the event.
         /// </summary>
-        public void sendCommand()
+        public void sendCommand(CommandRecievedEventArgs eventArgs)
         {
-            CommandRecievedEventArgs eventArgs = 
-                new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null);
             CommandRecieved?.Invoke(this, eventArgs);
         }
 

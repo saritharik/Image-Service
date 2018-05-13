@@ -8,47 +8,41 @@
       d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid x:Name="settings">
-        <TextBlock HorizontalAlignment="Center"
-                   Margin="312,10,343,0"
-                   TextWrapping="Wrap"
-                   Text="Settings"
-                   FontSize="40" FontStyle="Italic"
-                   VerticalAlignment="Top"
-                   Height="64" Width="145" />
         <TextBlock HorizontalAlignment="Left"
                    Margin="221,64,0,0"
                    TextWrapping="Wrap"
                    Text="{Binding SettingsModel.OutputDirectory, Mode=OneWay}"
                    FontSize="20"
                    VerticalAlignment="Top" 
-                   Height="35" Width="569"/>
+                   Height="35" Width="569"></TextBlock>
         <TextBlock HorizontalAlignment="Left"
                    Margin="221,103,0,0"
                    TextWrapping="Wrap"
                    Text="{Binding SettingsModel.SourceName, Mode=OneWay}"
                    FontSize="20"
                    VerticalAlignment="Top"
-                   Height="35" Width="569"/>
+                   Height="35" Width="569"></TextBlock>
         <TextBlock HorizontalAlignment="Left"
                    Margin="221,137,0,0"
                    TextWrapping="Wrap"
                    Text="{Binding SettingsModel.LogName, Mode=OneWay}"
                    FontSize="20"
                    VerticalAlignment="Top"
-                   Height="35" Width="569"/>
+                   Height="35" Width="569"></TextBlock>
         <TextBlock HorizontalAlignment="Left"
                    Margin="221,175,0,0"
                    TextWrapping="Wrap"
                    Text="{Binding SettingsModel.ThumbnailSize, Mode=OneWay}"
                    FontSize="20"
                    VerticalAlignment="Top"
-                   Height="35" Width="569"/>
+                   Height="35" Width="569"></TextBlock>
         <Button x:Name="RemoveButton"
                 Content="Remove"
                 Command="{Binding RemoveCommand}"
                 FontSize="30" FontStyle="Italic" FontWeight="Heavy"
                 HorizontalAlignment="Left" Margin="0,209,0,0" VerticalAlignment="Top" Width="800" Height="44"
-                AutomationProperties.AutomationId="RemoveButton"/>
+                AutomationProperties.AutomationId="RemoveButton">
+        </Button>
         <ListBox x:Name="handlers"
                  IsTabStop="False"
                  ItemsSource="{Binding Handlers}"
@@ -57,23 +51,31 @@
                  Height="197"
                  Margin="0,253,0,0"
                  VerticalAlignment="Top"
-                 Width="800"/>
+                 Width="800">
+        </ListBox>
         <TextBlock HorizontalAlignment="Left" Margin="12,64,0,0" TextWrapping="Wrap" 
                    Text="Output Directory:"
                    FontSize="20" FontWeight="Bold"
-                   VerticalAlignment="Top" Height="35" Width="200"/>
+                   VerticalAlignment="Top" Height="35" Width="200"></TextBlock>
         <TextBlock HorizontalAlignment="Left" Margin="12,102,0,0" TextWrapping="Wrap" 
             Text="Source Name:"
             FontSize="20" FontWeight="Bold"
-            VerticalAlignment="Top" Height="35" Width="200"/>
+            VerticalAlignment="Top" Height="35" Width="200"></TextBlock>
         <TextBlock HorizontalAlignment="Left" Margin="12,137,0,0" TextWrapping="Wrap" 
             Text="Log Name:"
             FontSize="20" FontWeight="Bold"
-            VerticalAlignment="Top" Height="35" Width="200"/>
+            VerticalAlignment="Top" Height="35" Width="200"></TextBlock>
         <TextBlock HorizontalAlignment="Left" Margin="12,175,0,0" TextWrapping="Wrap" 
             Text="Thumbnail Size:"
             FontSize="20" FontWeight="Bold"
-            VerticalAlignment="Top" Height="35" Width="200"/>
+            VerticalAlignment="Top" Height="35" Width="200"></TextBlock>
+        <TextBlock HorizontalAlignment="Center"
+                   Margin="312,10,343,0"
+                   TextWrapping="Wrap"
+                   Text="Settings"
+                   FontSize="40" FontStyle="Italic"
+                   VerticalAlignment="Top"
+                   Height="64" Width="145"/>
 
     </Grid>
 </UserControl>

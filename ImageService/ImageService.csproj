@@ -35,6 +35,9 @@
     <StartupObject>ImageService.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
@@ -62,6 +65,7 @@
     <Compile Include="ImageController.cs" />
     <Compile Include="ImageServer.cs" />
     <Compile Include="ImageService.communication\ClientHandler.cs" />
+    <Compile Include="ImageService.communication\GetConfigCommand.cs" />
     <Compile Include="ImageService.communication\IClientHandler.cs" />
     <Compile Include="ImageService.communication\TcpClientComm.cs" />
     <Compile Include="ImageService.communication\TcpServerComm.cs" />
@@ -87,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ImageService.resx">

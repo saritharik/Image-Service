@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\תמר\Source\Repos\Image-Service\ImageServiceGUI\obj\Debug\
+C:\Users\תמר\source\repos\Image-Service\ImageServiceGUI\obj\Debug\
 ImageServiceGUI
 none
 false
 DEBUG;TRACE
-C:\Users\תמר\Source\Repos\Image-Service\ImageServiceGUI\App.xaml
-3-1907040947
+C:\Users\תמר\source\repos\Image-Service\ImageServiceGUI\App.xaml
+41248560046
 
-16-871184000
-72-2093262600
-MainWindow.xaml;Views\LogView.xaml;Views\SettingsView.xaml;
+19-595500716
+72338255700
+MainWindow.xaml;Views\LogView.xaml;Views\SettingsView.xaml;Views\Settings.xaml;
 
 True
 

@@ -15,7 +15,7 @@ using ImageService.Logging;
 using ImageService.Logging.Modal;
 using System.Configuration;
 using ImageService.Infrastructure;
-
+using ImageService.Infrastructure.Enums;
 
 namespace ImageService
 {
@@ -97,7 +97,8 @@ namespace ImageService
 
         protected override void OnStop()
         {
-            m_imageServer.sendCommand();
+            m_imageServer.sendCommand
+                (new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, null));
             // Update the service state to Start Pending.  
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
