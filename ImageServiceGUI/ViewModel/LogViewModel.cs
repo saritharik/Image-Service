@@ -1,4 +1,7 @@
-﻿using ImageService.Logging.Modal;
+﻿using Communication;
+using ImageService.Infrastructure.Enums;
+using ImageService.Logging.Modal;
+using ImageServiceGUI.Communication;
 using ImageServiceGUI.Model;
 using System;
 using System.Collections.Generic;
@@ -22,6 +25,7 @@ namespace ImageServiceGUI.ViewModel
             LogModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
                 NotifyPropertyChanged(e.PropertyName);
             };
+            ClientCommSingelton.getInstance().DataReceived += getMessage;
         }
 
         protected void NotifyPropertyChanged(string name)
@@ -29,21 +33,23 @@ namespace ImageServiceGUI.ViewModel
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
+        public LogModel LogModel { get; set; }
 
-        private LogModel logModel;
-        public LogModel LogModel
-        {
-            get { return this.logModel; }
-            set
-            {
-                this.logModel = value;
-            }
-        }
-        private ObservableCollection<MessageRecievedEventArgs> log_messages;
+        //private ObservableCollection<MessageRecievedEventArgs> log_messages;
         public ObservableCollection<MessageRecievedEventArgs> LogMessages
         {
-            get { return this.logModel.LogMessages; }
+            get { return this.LogModel.LogMessages; }
             private set { }
+        }
+
+        public void getMessage(object sender, DataRecivedEventArgs dataArgs)
+        {
+            if (dataArgs.CommandID == (int)CommandEnum.LogCommand)
+            {
+                MessageRecievedEventArgs logMessage = new MessageRecievedEventArgs(MessageTypeEnum.INFO, dataArgs.Args);
+                this.LogMessages.Add(logMessage);
+            }
+
         }
     }
 }

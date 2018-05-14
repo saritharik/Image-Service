@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Communication;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ImageServiceGUI.Communication
 {
-    class ClientCommSingelton
+    class ClientCommSingelton : ITcpCommunication
     {
         private static ClientCommSingelton instance = null;
         private TcpClient client;
@@ -29,12 +31,22 @@ namespace ImageServiceGUI.Communication
             this.reader = new BinaryReader(stream);
             this.writer = new BinaryWriter(stream);
             {
-                // Send data to server
-                int num = int.Parse(Console.ReadLine());
-                writer.Write(num);
-                // Get result from server
-                int result = reader.ReadInt32();
-                Console.WriteLine("Result = {0}", result);
+                try
+                {
+                    while (true)
+                    {
+                        string data = reader.ReadString();
+
+                        Task task = new Task(() =>
+                        {
+                            receiveMessage(data);
+                        });
+                        task.Start();
+                    }
+                } catch (Exception e)
+                {
+                    Console.WriteLine("Tamar Hamaatzbenet");
+                }
             }
             client.Close();
         }
@@ -53,11 +65,21 @@ namespace ImageServiceGUI.Communication
             writer.Write(message);
         }
 
-        public string receiveMessage()
+        public string receiveMessage(string data)
         {
-            //DataRecivedEventArgs dataArgs = new DataRecivedEventArgs()
-            //DataReceived.Invoke()
+            DataRecivedEventArgs dataArgs = FromJson(data);
+            DataReceived?.Invoke(this, dataArgs);
             return " ";
+        }
+
+        public DataRecivedEventArgs FromJson(string data)
+        {
+            JObject dataObj = JObject.Parse(data);
+            int id = (int)dataObj["Id"];
+            string args = (string)dataObj["Args"];
+
+            DataRecivedEventArgs dataArgs = new DataRecivedEventArgs(id, args);
+            return dataArgs;
         }
     }
 }

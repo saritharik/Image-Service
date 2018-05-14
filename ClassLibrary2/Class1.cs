@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageServiceGUI.Communication
+namespace ClassLibrary2
 {
-    class TcpCommSingelton
+    public class Class1
     {
     }
 }

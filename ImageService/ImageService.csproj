@@ -64,11 +64,9 @@
     <Compile Include="ILoggingService.cs" />
     <Compile Include="ImageController.cs" />
     <Compile Include="ImageServer.cs" />
-    <Compile Include="ImageService.communication\ClientHandler.cs" />
-    <Compile Include="ImageService.communication\GetConfigCommand.cs" />
-    <Compile Include="ImageService.communication\IClientHandler.cs" />
-    <Compile Include="ImageService.communication\TcpClientComm.cs" />
-    <Compile Include="ImageService.communication\TcpServerComm.cs" />
+    <Compile Include="communication\ClientHandler.cs" />
+    <Compile Include="communication\IClientHandler.cs" />
+    <Compile Include="communication\ServerCommSingelton.cs" />
     <Compile Include="ImageService.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -101,6 +99,11 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Communication\Communication.csproj">
+      <Project>{126F44AA-4BDD-4790-8CE1-9A7F516FA038}</Project>
+      <Name>Communication</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
