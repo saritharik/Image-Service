@@ -26,6 +26,15 @@ namespace ImageServiceGUI.Model
             LogMessages.Add(new MessageRecievedEventArgs(MessageTypeEnum.INFO, "check"));
         }
 
-        public ObservableCollection<MessageRecievedEventArgs> LogMessages { get; set; }
+        private ObservableCollection<MessageRecievedEventArgs> log_messages;
+        public ObservableCollection<MessageRecievedEventArgs> LogMessages
+        {
+            get { return log_messages; }
+            set
+            {
+                log_messages = value;
+                OnPropertyChanged("log messages");
+            }
+        }
     }
 }

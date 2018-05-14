@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 
-namespace ImageService.ImageService.Communication
+namespace ImageService.communication
 {
     class TcpServerComm
     {

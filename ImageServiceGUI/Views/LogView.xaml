@@ -16,7 +16,8 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Type">
                     <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="{x:Type TextBlock}">
+                        <Style TargetType="TextBlock">
+                            <Setter Value="{Binding Path=LogMessages.status}" Property="Background"></Setter>
                             <Style.Triggers>
                                 <Trigger Property="Text" Value="INFO">
                                     <Setter Property="Background" Value="Green"/>
@@ -31,7 +32,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Message"
+                <DataGridTextColumn Header="Message" Binding="{Binding LogMessages}"
                                         IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>

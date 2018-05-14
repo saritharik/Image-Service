@@ -64,11 +64,10 @@
     <Compile Include="ILoggingService.cs" />
     <Compile Include="ImageController.cs" />
     <Compile Include="ImageServer.cs" />
-    <Compile Include="ImageService.communication\ClientHandler.cs" />
-    <Compile Include="ImageService.communication\GetConfigCommand.cs" />
-    <Compile Include="ImageService.communication\IClientHandler.cs" />
-    <Compile Include="ImageService.communication\TcpClientComm.cs" />
-    <Compile Include="ImageService.communication\TcpServerComm.cs" />
+    <Compile Include="communication\ClientHandler.cs" />
+    <Compile Include="communication\IClientHandler.cs" />
+    <Compile Include="communication\TcpClientComm.cs" />
+    <Compile Include="communication\TcpServerComm.cs" />
     <Compile Include="ImageService.cs">
       <SubType>Component</SubType>
     </Compile>

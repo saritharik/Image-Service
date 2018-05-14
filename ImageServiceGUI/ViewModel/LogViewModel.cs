@@ -19,6 +19,7 @@ namespace ImageServiceGUI.ViewModel
         public LogViewModel()
         {
             this.LogModel = new LogModel();
+            
             LogModel.PropertyChanged += delegate (Object sender, PropertyChangedEventArgs e) {
                 NotifyPropertyChanged(e.PropertyName);
             };
@@ -39,7 +40,7 @@ namespace ImageServiceGUI.ViewModel
                 this.logModel = value;
             }
         }
-        private ObservableCollection<MessageRecievedEventArgs> log_messages;
+        //private ObservableCollection<MessageRecievedEventArgs> log_messages;
         public ObservableCollection<MessageRecievedEventArgs> LogMessages
         {
             get { return this.logModel.LogMessages; }

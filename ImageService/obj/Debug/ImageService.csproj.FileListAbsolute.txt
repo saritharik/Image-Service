@@ -28,3 +28,6 @@ C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.c
 C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.csproj.CoreCompileInputs.cache
 C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.exe
 C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.pdb
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\Newtonsoft.Json.dll
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\Newtonsoft.Json.xml
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.csproj.CopyComplete

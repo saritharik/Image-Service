@@ -17,7 +17,7 @@ namespace ImageServiceGUI.Communication
         private BinaryReader reader;
         private BinaryWriter writer;
 
-        public event EventHandler<DataRecivedEventArgs> DataReceived;
+        //public event EventHandler<DataRecivedEventArgs> DataReceived;
 
         private ClientCommSingelton()
         {

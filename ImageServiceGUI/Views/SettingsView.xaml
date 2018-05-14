@@ -75,7 +75,7 @@
                    Text="Settings"
                    FontSize="40" FontStyle="Italic"
                    VerticalAlignment="Top"
-                   Height="64" Width="145"/>
+                   Height="64" Width="145"></TextBlock>
 
     </Grid>
 </UserControl>

@@ -16,7 +16,7 @@
             <TabItem Header="Settings" Margin="-2,0" Height="22" VerticalAlignment="Bottom">
                 <uc:SettingsView/>
             </TabItem>
-            <TabItem Header="Logs" Margin="-2,-2,2,0" Height="22" VerticalAlignment="Top">
+            <TabItem Header="Logs" Margin="3,0,-3,0" Height="22" VerticalAlignment="Top">
                 <uc:LogView/>
             </TabItem>
         </TabControl>
