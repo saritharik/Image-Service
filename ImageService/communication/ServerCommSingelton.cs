@@ -5,20 +5,34 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
+using Communication;
 
 namespace ImageService.communication
 {
-    class TcpServerComm
+    class ServerCommSingelton : ITcpCommunication
     {
+        private static ServerCommSingelton instance = null;
         private int port;
         private TcpListener listener;
         private IClientHandler ch;
 
-        public TcpServerComm(int port, IClientHandler ch)
+        public event EventHandler<DataRecivedEventArgs> DataReceived;
+
+        private ServerCommSingelton(int port, IClientHandler ch)
         {
             this.port = port;
             this.ch = ch;
         }
+
+        public static ServerCommSingelton getInstance(int port, IClientHandler ch)
+        {
+            if (instance == null)
+            {
+                instance = new ServerCommSingelton(port, ch);
+            }
+            return instance;
+        }
+
         public void Start()
         {
             IPEndPoint ep = new
@@ -46,9 +60,21 @@ namespace ImageService.communication
             });
             task.Start();
         }
+
         public void Stop()
         {
             listener.Stop();
+        }
+
+        public void sendMessage(string message)
+        {
+
+        }
+
+        public string receiveMessage(string data)
+        {
+
+            return " ";
         }
     }
 }
