@@ -1,4 +1,5 @@
 ﻿
+using ImageService.communication;
 using ImageService.Logging.Modal;
 using System;
 using System.Collections.Generic;

@@ -9,6 +9,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
+using ImageService.communication;
+using System.Net.Sockets;
+using System.Net;
+using ImageService.Logging.Modal;
 
 namespace ImageService.Server
 {
@@ -17,6 +21,10 @@ namespace ImageService.Server
         #region Members
         private IImageController m_controller;
         private ILoggingService m_logging;
+
+        private List<TcpClient> clients;
+        private int port;
+        private TcpListener listener;
         //private Dictionary<String, CommandRecievedEventArgs> commands;
         #endregion
 
@@ -27,19 +35,84 @@ namespace ImageService.Server
         public ImageServer(ILoggingService logging)
         {
             m_logging = logging;
+            clients = new List<TcpClient>();
             IImageServiceModal imageServiceModal = new ImageServiceModal(logging);
             m_controller = new ImageController(imageServiceModal);
+
+            m_logging.MessageRecieved += newLogMsg;
+
             string directories = ConfigurationManager.AppSettings["Handler"];
             string[] pathes = directories.Split(';');
             foreach (string path in pathes)
             {
                 createHandler(path);
             }
-            
+
+            port = 8888;
+            StartTcpComuunication();
         }
         #region Properties
         public event EventHandler<CommandRecievedEventArgs> CommandRecieved;          // The event that notifies about a new Command being recieved
         #endregion
+
+        public void StartTcpComuunication()
+        {
+            IPEndPoint ep = new
+                IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
+            listener = new TcpListener(ep);
+
+            try
+            {
+                listener.Start();
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+            Console.WriteLine("Waiting for connections...");
+
+            Task task = new Task(() => {
+                while (true)
+                {
+                    try
+                    {
+                        TcpClient client = listener.AcceptTcpClient();
+                        clients.Add(client);
+                        Console.WriteLine("Got new connection");
+                        sendConfig(client);
+                        ServerCommSingelton.getInstance().receiveMessage(client);
+                        // send log + send request for handler remove
+
+                        //ch.HandleClient(client);
+                    }
+                    catch (SocketException)
+                    {
+                        break;
+                    }
+                }
+                Console.WriteLine("Server stopped");
+            });
+            task.Start();
+        }
+
+
+        public void sendConfig(TcpClient client)
+        {
+            string[] config = {ConfigurationManager.AppSettings["Handler"], ConfigurationManager.AppSettings["OutputDir"],
+            ConfigurationManager.AppSettings["SourceName"], ConfigurationManager.AppSettings["LogName"],
+            ConfigurationManager.AppSettings["ThumbnailSize"]};
+            ServerCommSingelton.getInstance().settingsMessage(config, client);
+        }
+
+        public void newLogMsg(object sender, MessageRecievedEventArgs msg)
+        {
+            foreach (TcpClient client in clients)
+            {
+                ServerCommSingelton.getInstance().logMessage(msg, client);
+
+            }
+        }
 
         /// <summary>
         /// Create a handler that listen to specific folder, and add it to the CommandRecieved event

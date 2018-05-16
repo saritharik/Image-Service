@@ -1,5 +1,4 @@
-﻿using Communication;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,44 +7,48 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Communication;
 
-namespace ImageServiceGUI.Communication
+
+namespace ImageServiceGUI.communication
 {
     class ClientCommSingelton : ITcpCommunication
     {
         private static ClientCommSingelton instance = null;
         private TcpClient client;
         private NetworkStream stream;
-        private BinaryReader reader;
-        private BinaryWriter writer;
+        private StreamReader reader;
+        private StreamWriter writer;
 
-        //public event EventHandler<DataRecivedEventArgs> DataReceived;
+        public event EventHandler<DataRecivedEventArgs> DataReceived;
 
         private ClientCommSingelton()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8888);
             this.client = new TcpClient();
             client.Connect(ep);
             Console.WriteLine("You are connected");
             this.stream = client.GetStream();
-            this.reader = new BinaryReader(stream);
-            this.writer = new BinaryWriter(stream);
+            this.reader = new StreamReader(stream);
+            this.writer = new StreamWriter(stream);
             {
                 try
                 {
                     while (true)
                     {
-                        string data = reader.ReadString();
+                        string data = reader.ReadLine();
 
                         Task task = new Task(() =>
                         {
-                            receiveMessage(data);
+
+                            string result = receiveMessage(data);
+                            sendMessage(result);
                         });
                         task.Start();
                     }
                 } catch (Exception e)
                 {
-                    Console.WriteLine("Tamar Hamaatzbenet");
+                    Console.WriteLine("catch");
                 }
             }
             client.Close();
@@ -62,14 +65,21 @@ namespace ImageServiceGUI.Communication
 
         public void sendMessage(string message)
         {
-            writer.Write(message);
+            writer.WriteLine(message);
         }
 
         public string receiveMessage(string data)
         {
-            DataRecivedEventArgs dataArgs = FromJson(data);
-            DataReceived?.Invoke(this, dataArgs);
-            return " ";
+            string result = "succeeded";
+            try
+            {
+                DataRecivedEventArgs dataArgs = FromJson(data);
+                DataReceived?.Invoke(this, dataArgs);
+            } catch (Exception e)
+            {
+                result = e.ToString();
+            }
+            return result;
         }
 
         public DataRecivedEventArgs FromJson(string data)

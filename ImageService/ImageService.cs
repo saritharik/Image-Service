@@ -121,7 +121,7 @@ namespace ImageService
             eventLog1.WriteEntry("In OnContinue.");
         }
 
-        public void onMsg(object o, MessageRecievedEventArgs msg)
+        public void onMsg(object sender, MessageRecievedEventArgs msg)
         {
             eventLog1.WriteEntry(msg.Message);
         }

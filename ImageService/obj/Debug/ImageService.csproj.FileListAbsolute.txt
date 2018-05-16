@@ -31,3 +31,5 @@ C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.p
 C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\Newtonsoft.Json.dll
 C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\Newtonsoft.Json.xml
 C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.csproj.CopyComplete
+C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\Communication.dll
+C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\Communication.pdb

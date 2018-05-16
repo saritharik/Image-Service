@@ -1,4 +1,8 @@
-﻿using ImageService.Logging.Modal;
+﻿using Communication;
+using ImageService.Infrastructure.Enums;
+using ImageService.Logging.Modal;
+using ImageServiceGUI.communication;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,6 +28,7 @@ namespace ImageServiceGUI.Model
         {
             LogMessages = new ObservableCollection<MessageRecievedEventArgs>();
             LogMessages.Add(new MessageRecievedEventArgs(MessageTypeEnum.INFO, "check"));
+            ClientCommSingelton.getInstance().DataReceived += GetMessage;
         }
 
         private ObservableCollection<MessageRecievedEventArgs> log_messages;
@@ -35,6 +40,35 @@ namespace ImageServiceGUI.Model
                 log_messages = value;
                 OnPropertyChanged("log messages");
             }
+        }
+
+        public void GetMessage(object sender, DataRecivedEventArgs dataArgs)
+        {
+            if (dataArgs.CommandID == (int)CommandEnum.LogCommand)
+            {
+                MessageRecievedEventArgs logMessage = FromJson(dataArgs.Args);
+                this.log_messages.Add(logMessage);
+            }
+        }
+
+        public MessageRecievedEventArgs FromJson(string args)
+        {
+            MessageTypeEnum messageType = MessageTypeEnum.INFO;
+            JObject messageObj = JObject.Parse(args);
+            string type = (string)messageObj["Type"];
+            if (type == "INFO")
+            {
+                messageType = MessageTypeEnum.INFO;
+            } else if (type == "FAIL")
+            {
+                messageType = MessageTypeEnum.FAIL;
+            } else if (type == "WARNING")
+            {
+                messageType = MessageTypeEnum.WARNING;
+            }
+            MessageRecievedEventArgs eventArgs = new MessageRecievedEventArgs(
+                messageType, (string)messageObj["Message"]);
+            return eventArgs;
         }
     }
 }

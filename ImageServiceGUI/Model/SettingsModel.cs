@@ -1,5 +1,8 @@
-﻿using ImageService.Infrastructure.Enums;
+﻿using Communication;
+using ImageService.Infrastructure.Enums;
+using ImageService.Logging.Modal;
 using ImageService.Modal;
+using ImageServiceGUI.communication;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -26,7 +29,8 @@ namespace ImageServiceGUI.Model
         public SettingsModel()
         {
             handlers = new ObservableCollection<string>();
-            handlers.Add("newPath");
+            handlers.Add("example");
+            ClientCommSingelton.getInstance().DataReceived += GetMessage;
         }
 
         private string output_directory = "outputDirectory";
@@ -100,18 +104,42 @@ namespace ImageServiceGUI.Model
             // remove the selected handler with the server
             CommandRecievedEventArgs args = 
                 new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, selected_handler);
-            string command = ToJSON(args);
+            //string command = ToJSON(args);
             
         }
 
-        public string ToJSON(CommandRecievedEventArgs args)
+        /*public string ToJSON(CommandRecievedEventArgs args)
         {
             JObject commandObj = new JObject();
             commandObj["CommandID"] = args.CommandID;
             commandObj["Args"] = args.Args[0];
             commandObj["Path"] = args.RequestDirPath;
             return commandObj.ToString();
+        }*/
+
+        public void GetMessage(object sender, DataRecivedEventArgs dataArgs)
+        {
+            if (dataArgs.CommandID == (int)CommandEnum.GetConfigCommand)
+            {
+                FromJson(dataArgs.Args);
+            }
         }
-        
+
+        public void FromJson(string args)
+        {
+            JObject configObj = JObject.Parse(args);
+            string directories = (string)configObj["Handlers"];
+            this.output_directory = (string)configObj["OutputDir"];
+            this.source_name = (string)configObj["SourceName"];
+            this.log_name = (string)configObj["LogName"];
+            this.thumbnail_size = (string)configObj["ThumbnailSize"];
+            
+            string[] pathes = directories.Split(';');
+            foreach (string path in pathes)
+            {
+                handlers.Add(path);
+            }
+        }
+
     }
 }

@@ -6,75 +6,106 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using Communication;
+using ImageService.Infrastructure.Enums;
+using Newtonsoft.Json.Linq;
+using ImageService.Logging.Modal;
+using System.IO;
 
 namespace ImageService.communication
 {
-    class ServerCommSingelton : ITcpCommunication
+    class ServerCommSingelton// : ITcpCommunication
     {
         private static ServerCommSingelton instance = null;
-        private int port;
-        private TcpListener listener;
-        private IClientHandler ch;
+        //private int port;
+        //private TcpListener listener;
+        //private IClientHandler ch;
+
+        private NetworkStream stream;
+        private StreamReader reader;
+        private StreamWriter writer;
 
         public event EventHandler<DataRecivedEventArgs> DataReceived;
 
-        private ServerCommSingelton(int port, IClientHandler ch)
+        private ServerCommSingelton(/*int port, IClientHandler ch*/)
         {
-            this.port = port;
-            this.ch = ch;
+            //this.port = 8000;
+            //this.ch = new ClientHandler();
+            //this.DataReceived += ConvertMsg;
         }
 
-        public static ServerCommSingelton getInstance(int port, IClientHandler ch)
+        public static ServerCommSingelton getInstance()
         {
             if (instance == null)
             {
-                instance = new ServerCommSingelton(port, ch);
+                instance = new ServerCommSingelton();
             }
             return instance;
         }
 
-        public void Start()
+         /*public void Stop()
+         {
+             listener.Stop();
+         }*/
+
+        public void sendMessage(string message, TcpClient client)
         {
-            IPEndPoint ep = new
-                IPEndPoint(IPAddress.Parse("127.0.0.1"), port);
-            listener = new TcpListener(ep);
-
-            listener.Start();
-            Console.WriteLine("Waiting for connections...");
-
-            Task task = new Task(() => {
-                while (true)
-                {
-                    try
-                    {
-                        TcpClient client = listener.AcceptTcpClient();
-                        Console.WriteLine("Got new connection");
-                        ch.HandleClient(client);
-                    }
-                    catch (SocketException)
-                    {
-                        break;
-                    }
-                }
-                Console.WriteLine("Server stopped");
-            });
-            task.Start();
+            stream = client.GetStream();
+            writer = new StreamWriter(stream);
+            try
+            {
+                writer.WriteLine(message);
+            } catch (IOException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            
         }
 
-        public void Stop()
+        public string receiveMessage(TcpClient client)
         {
-            listener.Stop();
+            stream = client.GetStream();
+            reader = new StreamReader(stream);
+            string message;
+            try
+            {
+                message = reader.ReadLine();
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine(e.ToString());
+                message = e.ToString();
+            }
+            return message;
         }
 
-        public void sendMessage(string message)
+        /*public void ConvertMsg(object sender, DataRecivedEventArgs args, )
         {
+            JObject dataObj = new JObject();
+            dataObj["Id"] = args.CommandID;
+            dataObj["Args"] = args.Args;
+            sendMessage(dataObj.ToString());
+        }*/
 
+        public void logMessage(MessageRecievedEventArgs data, TcpClient client)
+        {
+            JObject logObj = new JObject();
+            logObj["Type"] = data.Status.ToString();
+            logObj["Message"] = data.Message;
+            sendMessage(logObj.ToString(), client);
         }
 
-        public string receiveMessage(string data)
+        public void settingsMessage(string[] data, TcpClient client)
         {
+            JObject configObj = new JObject();
+            configObj["Handlers"] = data[0];
+            configObj["OutputDir"] = data[1];
+            configObj["SourceName"] = data[2];
+            configObj["LogName"] = data[3];
+            configObj["ThumbnailSize"] = data[4];
 
-            return " ";
+            sendMessage(configObj.ToString(), client);
         }
+
+
     }
 }
