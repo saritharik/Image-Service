@@ -13,7 +13,7 @@ using System.Text.RegularExpressions;
 
 namespace ImageService.Controller.Handlers
 {
-    public class DirectoyHandler : IDirectoryHandler
+    public class DirectoryHandler : IDirectoryHandler
     {
         #region Members
         private IImageController m_controller;              // The Image Processing Controller
@@ -33,7 +33,7 @@ namespace ImageService.Controller.Handlers
         /// <param name="directory"></param> the path of the folder
         /// <param name="controller"></param> the controller execute the specific command
         /// <param name="logging"></param> a logger to update the seccess or failed missions.
-        public DirectoyHandler(String directory, IImageController controller, ILoggingService logging)
+        public DirectoryHandler(String directory, IImageController controller, ILoggingService logging)
         {
             m_controller = controller;
             m_path = directory;

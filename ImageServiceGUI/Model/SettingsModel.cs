@@ -3,6 +3,7 @@ using ImageService.Infrastructure.Enums;
 using ImageService.Logging.Modal;
 using ImageService.Modal;
 using ImageServiceGUI.communication;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,9 @@ using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace ImageServiceGUI.Model
 {
@@ -21,59 +24,61 @@ namespace ImageServiceGUI.Model
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string name)
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(name));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
         #endregion
 
         public SettingsModel()
         {
             handlers = new ObservableCollection<string>();
-            handlers.Add("example");
+            Object handlersLock = new Object();
+            BindingOperations.EnableCollectionSynchronization(handlers, handlersLock);
+            //Thread.Sleep(1000);
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
+            ClientCommSingelton.getInstance().DataReceived += GetRemoveMessage;
         }
 
-        private string output_directory = "outputDirectory";
+        private string output_directory;// = "outputDirectory";
         public string OutputDirectory
         {
             get { return output_directory; }
             set
             {
                 output_directory = value;
-                OnPropertyChanged("Directory");
+                OnPropertyChanged("OutputDirectory");
             }
         }
 
-        private string source_name = "sourceName";
+        private string source_name;// = "sourceName";
         public string SourceName
         {
             get { return source_name; }
             set
             {
                 source_name = value;
-                OnPropertyChanged("Source Name");
+                OnPropertyChanged("SourceName");
             }
         }
 
-        private string log_name = "logName";
+        private string log_name;// = "logName";
         public string LogName
         {
             get { return log_name; }
             set
             {
                 log_name = value;
-                OnPropertyChanged("Log Name");
+                OnPropertyChanged("LogName");
             }
         }
 
-        private string thumbnail_size = "120";
+        private string thumbnail_size;// = "120";
         public string ThumbnailSize
         {
             get { return thumbnail_size; }
             set
             {
                 thumbnail_size = value;
-                OnPropertyChanged("Thumbnails Size");
+                OnPropertyChanged("ThumbnailSize");
             }
         }
 
@@ -84,7 +89,7 @@ namespace ImageServiceGUI.Model
             set
             {
                 selected_handler = value;
-                OnPropertyChanged("Selected Handler");
+                OnPropertyChanged("SelectedHandler");
             }
         }
 
@@ -102,10 +107,7 @@ namespace ImageServiceGUI.Model
         public void RemoveHandlerCommand()
         {
             // remove the selected handler with the server
-            CommandRecievedEventArgs args = 
-                new CommandRecievedEventArgs((int)CommandEnum.CloseCommand, null, selected_handler);
-            //string command = ToJSON(args);
-            
+            ClientCommSingelton.getInstance().sendMessage(selected_handler, (int)CommandEnum.CloseCommand);            
         }
 
         /*public string ToJSON(CommandRecievedEventArgs args)
@@ -122,12 +124,23 @@ namespace ImageServiceGUI.Model
             if (dataArgs.CommandID == (int)CommandEnum.GetConfigCommand)
             {
                 FromJson(dataArgs.Args);
+                ClientCommSingelton.getInstance().sendMessage("succeeded", (int)CommandEnum.GetConfigCommand);
             }
         }
 
-        public void FromJson(string args)
+        public void GetRemoveMessage(object sender, DataRecivedEventArgs dataArgs)
         {
-            JObject configObj = JObject.Parse(args);
+            if (dataArgs.CommandID == (int)CommandEnum.CloseCommand)
+            {
+                if (this.Handlers.Contains(dataArgs.Args))
+                {
+                    this.Handlers.Remove(dataArgs.Args);
+                }
+            }
+        }
+        public void FromJson(string data)
+        {
+            JObject configObj = JsonConvert.DeserializeObject<JObject>(data);// JObject.Parse(args);
             string directories = (string)configObj["Handlers"];
             this.output_directory = (string)configObj["OutputDir"];
             this.source_name = (string)configObj["SourceName"];

@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace ImageServiceGUI.Model
 {
@@ -27,7 +28,8 @@ namespace ImageServiceGUI.Model
         public LogModel()
         {
             LogMessages = new ObservableCollection<MessageRecievedEventArgs>();
-            LogMessages.Add(new MessageRecievedEventArgs(MessageTypeEnum.INFO, "check"));
+            Object logLock = new Object();
+            BindingOperations.EnableCollectionSynchronization(LogMessages, logLock);
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
         }
 
@@ -48,6 +50,7 @@ namespace ImageServiceGUI.Model
             {
                 MessageRecievedEventArgs logMessage = FromJson(dataArgs.Args);
                 this.log_messages.Add(logMessage);
+                ClientCommSingelton.getInstance().sendMessage("succeeded", (int)CommandEnum.LogCommand);
             }
         }
 

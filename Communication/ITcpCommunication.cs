@@ -10,7 +10,7 @@ namespace Communication
     {
         event EventHandler<DataRecivedEventArgs> DataReceived;
 
-        void sendMessage(string message);
+        void sendMessage(string message, int id);
 
         string receiveMessage(string data);
     }

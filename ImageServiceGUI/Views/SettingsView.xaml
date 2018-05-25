@@ -8,34 +8,58 @@
       d:DesignHeight="450" d:DesignWidth="800">
 
     <Grid x:Name="settings">
-        <TextBlock HorizontalAlignment="Left"
-                   Margin="221,64,0,0"
-                   TextWrapping="Wrap"
-                   Text="{Binding SettingsModel.OutputDirectory, Mode=OneWay}"
-                   FontSize="20"
-                   VerticalAlignment="Top" 
-                   Height="35" Width="569"></TextBlock>
-        <TextBlock HorizontalAlignment="Left"
-                   Margin="221,103,0,0"
-                   TextWrapping="Wrap"
-                   Text="{Binding SettingsModel.SourceName, Mode=OneWay}"
-                   FontSize="20"
-                   VerticalAlignment="Top"
-                   Height="35" Width="569"></TextBlock>
-        <TextBlock HorizontalAlignment="Left"
-                   Margin="221,137,0,0"
-                   TextWrapping="Wrap"
-                   Text="{Binding SettingsModel.LogName, Mode=OneWay}"
-                   FontSize="20"
-                   VerticalAlignment="Top"
-                   Height="35" Width="569"></TextBlock>
-        <TextBlock HorizontalAlignment="Left"
-                   Margin="221,175,0,0"
-                   TextWrapping="Wrap"
-                   Text="{Binding SettingsModel.ThumbnailSize, Mode=OneWay}"
-                   FontSize="20"
-                   VerticalAlignment="Top"
-                   Height="35" Width="569"></TextBlock>
+        <Grid.Resources>
+            <Style x:Key="Title">
+                <Setter Property="TextBlock.FontSize" Value="40"/>
+                <Setter Property="TextBlock.FontStyle" Value="Italic"/>
+                <Setter Property="TextBlock.Width" Value="200"/>
+                <Setter Property="TextBlock.Height" Value="Auto"/>
+                <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                <Setter Property="TextBlock.VerticalAlignment" Value="Top"/>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                <Setter Property="TextBlock.Background" Value="IndianRed"/>
+            </Style>
+
+            <Style x:Key="TextBlock">
+                <Setter Property="TextBlock.FontSize" Value="20"/>
+                <Setter Property="TextBlock.FontStyle" Value="Italic"/>
+                <Setter Property="TextBlock.Width" Value="570"/>
+                <Setter Property="TextBlock.Height" Value="30"/>
+                <Setter Property="TextBlock.FontWeight" Value="ExtraLight"/>
+                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                <Setter Property="TextBlock.VerticalAlignment" Value="Top"/>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
+                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+
+            </Style>
+
+            <Style x:Key="settingsText">
+                <Setter Property="TextBlock.FontSize" Value="20"/>
+                <Setter Property="TextBlock.FontStyle" Value="Italic"/>
+                <Setter Property="TextBlock.Width" Value="200"/>
+                <Setter Property="TextBlock.Height" Value="30"/>
+                <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                <Setter Property="TextBlock.VerticalAlignment" Value="Top"/>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
+                <Setter Property="TextBlock.TextAlignment" Value="Left"/>
+                <Setter Property="TextBlock.TextDecorations" Value="UnderLine"/>
+                <Setter Property="TextBlock.Foreground" Value="Crimson"/>
+            </Style>
+
+
+
+        </Grid.Resources>
+        <TextBlock Style="{StaticResource TextBlock}"
+                   Text="{Binding OutputDirectory, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="230,65,0,0"></TextBlock>
+        <TextBlock Style="{StaticResource TextBlock}"
+                   Text="{Binding SourceName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="230,100,0,0"></TextBlock>
+        <TextBlock Style="{StaticResource TextBlock}"
+                   Text="{Binding LogName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="230,135,0,0"></TextBlock>
+        <TextBlock Style="{StaticResource TextBlock}"
+                   Text="{Binding ThumbnailSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="230,170,0,0"></TextBlock>
         <Button x:Name="RemoveButton"
                 Content="Remove"
                 Command="{Binding RemoveCommand}"
@@ -46,36 +70,23 @@
         <ListBox x:Name="handlers"
                  IsTabStop="False"
                  ItemsSource="{Binding Handlers}"
-                 SelectedItem="{Binding SettingsModel.SelectedHandler, Mode=TwoWay}"
+                 SelectedItem="{Binding SelectedHandler}"
                  HorizontalAlignment="Left"
-                 Height="197"
+                 Height="197" Width="800"
                  Margin="0,253,0,0"
                  VerticalAlignment="Top"
-                 Width="800">
-        </ListBox>
-        <TextBlock HorizontalAlignment="Left" Margin="12,64,0,0" TextWrapping="Wrap" 
-                   Text="Output Directory:"
-                   FontSize="20" FontWeight="Bold"
-                   VerticalAlignment="Top" Height="35" Width="200"></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="12,102,0,0" TextWrapping="Wrap" 
-            Text="Source Name:"
-            FontSize="20" FontWeight="Bold"
-            VerticalAlignment="Top" Height="35" Width="200"></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="12,137,0,0" TextWrapping="Wrap" 
-            Text="Log Name:"
-            FontSize="20" FontWeight="Bold"
-            VerticalAlignment="Top" Height="35" Width="200"></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="12,175,0,0" TextWrapping="Wrap" 
-            Text="Thumbnail Size:"
-            FontSize="20" FontWeight="Bold"
-            VerticalAlignment="Top" Height="35" Width="200"></TextBlock>
-        <TextBlock HorizontalAlignment="Center"
-                   Margin="312,10,343,0"
-                   TextWrapping="Wrap"
-                   Text="Settings"
-                   FontSize="40" FontStyle="Italic"
-                   VerticalAlignment="Top"
-                   Height="64" Width="145"></TextBlock>
+                 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
 
+        <TextBlock Style="{StaticResource settingsText}"
+                   Margin="12,65,0,0" Text="Output Directory:"></TextBlock>
+        <TextBlock Style="{StaticResource settingsText}"
+                   Margin="12,100,0,0" Text="Source Name:"></TextBlock>
+        <TextBlock Style="{StaticResource settingsText}" 
+                   Margin="12,135,0,0" Text="Log Name:"></TextBlock>
+        <TextBlock Style="{StaticResource settingsText}"
+                   Margin="12,170,0,0"  Text="Thumbnail Size:"></TextBlock>
+        <TextBlock Grid.Row="0"
+                   Style="{StaticResource Title}"
+                   Text="Settings" Width="800"/>
     </Grid>
 </UserControl>

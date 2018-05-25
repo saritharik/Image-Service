@@ -10,28 +10,21 @@ using ImageService.Infrastructure.Enums;
 using Newtonsoft.Json.Linq;
 using ImageService.Logging.Modal;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace ImageService.communication
 {
     class ServerCommSingelton// : ITcpCommunication
     {
         private static ServerCommSingelton instance = null;
-        //private int port;
-        //private TcpListener listener;
-        //private IClientHandler ch;
 
         private NetworkStream stream;
-        private StreamReader reader;
-        private StreamWriter writer;
+        private BinaryReader reader;
+        private BinaryWriter writer;
 
         public event EventHandler<DataRecivedEventArgs> DataReceived;
 
-        private ServerCommSingelton(/*int port, IClientHandler ch*/)
-        {
-            //this.port = 8000;
-            //this.ch = new ClientHandler();
-            //this.DataReceived += ConvertMsg;
-        }
+        private ServerCommSingelton() {}
 
         public static ServerCommSingelton getInstance()
         {
@@ -42,33 +35,30 @@ namespace ImageService.communication
             return instance;
         }
 
-         /*public void Stop()
-         {
-             listener.Stop();
-         }*/
+       
 
         public void sendMessage(string message, TcpClient client)
         {
             stream = client.GetStream();
-            writer = new StreamWriter(stream);
+            writer = new BinaryWriter(stream);
             try
             {
-                writer.WriteLine(message);
+                writer.Write(message);
             } catch (IOException e)
             {
                 Console.WriteLine(e.ToString());
             }
-            
         }
 
         public string receiveMessage(TcpClient client)
         {
             stream = client.GetStream();
-            reader = new StreamReader(stream);
+            reader = new BinaryReader(stream);
             string message;
             try
             {
-                message = reader.ReadLine();
+                message = reader.ReadString();
+                DataReceived?.Invoke(this, fromJsonRecvCommand(message));
             }
             catch (IOException e)
             {
@@ -78,20 +68,20 @@ namespace ImageService.communication
             return message;
         }
 
-        /*public void ConvertMsg(object sender, DataRecivedEventArgs args, )
+        public void ConvertMsg(int id, string data, TcpClient client)
         {
             JObject dataObj = new JObject();
-            dataObj["Id"] = args.CommandID;
-            dataObj["Args"] = args.Args;
-            sendMessage(dataObj.ToString());
-        }*/
+            dataObj["Id"] = id;
+            dataObj["Args"] = data;
+            sendMessage(JsonConvert.SerializeObject(dataObj), client);
+        }
 
         public void logMessage(MessageRecievedEventArgs data, TcpClient client)
         {
             JObject logObj = new JObject();
             logObj["Type"] = data.Status.ToString();
             logObj["Message"] = data.Message;
-            sendMessage(logObj.ToString(), client);
+            ConvertMsg((int)CommandEnum.LogCommand, JsonConvert.SerializeObject(logObj), client);
         }
 
         public void settingsMessage(string[] data, TcpClient client)
@@ -102,10 +92,14 @@ namespace ImageService.communication
             configObj["SourceName"] = data[2];
             configObj["LogName"] = data[3];
             configObj["ThumbnailSize"] = data[4];
-
-            sendMessage(configObj.ToString(), client);
+            ConvertMsg((int)CommandEnum.GetConfigCommand, JsonConvert.SerializeObject(configObj), client);
         }
 
-
+        public DataRecivedEventArgs fromJsonRecvCommand(string data)
+        {
+            JObject recv = JsonConvert.DeserializeObject<JObject>(data);
+            DataRecivedEventArgs dataArgs = new DataRecivedEventArgs((int)recv["Id"], (string)recv["Args"]);
+            return dataArgs;
+        }
     }
 }

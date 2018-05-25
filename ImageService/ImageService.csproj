@@ -57,7 +57,7 @@
     <Compile Include="CommandRecievedEventArgs.cs" />
     <Compile Include="communication\ServerCommSingelton.cs" />
     <Compile Include="DirectoryCloseEventArgs.cs" />
-    <Compile Include="DirectoyHandler.cs" />
+    <Compile Include="DirectoryHandler.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IDirectoryHandler.cs" />
     <Compile Include="IImageController.cs" />

@@ -8,7 +8,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Communication;
-
+using Newtonsoft.Json;
 
 namespace ImageServiceGUI.communication
 {
@@ -17,41 +17,51 @@ namespace ImageServiceGUI.communication
         private static ClientCommSingelton instance = null;
         private TcpClient client;
         private NetworkStream stream;
-        private StreamReader reader;
-        private StreamWriter writer;
+        private BinaryReader reader;
+        private BinaryWriter writer;
 
         public event EventHandler<DataRecivedEventArgs> DataReceived;
 
         private ClientCommSingelton()
         {
-            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8888);
+            IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
             this.client = new TcpClient();
-            client.Connect(ep);
+            try
+            {
+                client.Connect(ep);
+                //this.Connected = true;
+            } catch (Exception e)
+            {
+                //this.Connected = false;
+            }
             Console.WriteLine("You are connected");
             this.stream = client.GetStream();
-            this.reader = new StreamReader(stream);
-            this.writer = new StreamWriter(stream);
+            this.reader = new BinaryReader(stream);
+            this.writer = new BinaryWriter(stream);
+            try
             {
-                try
+                Task task = new Task(() =>
                 {
                     while (true)
                     {
-                        string data = reader.ReadLine();
-
-                        Task task = new Task(() =>
+                        try
                         {
-
+                            string data = reader.ReadString();
                             string result = receiveMessage(data);
-                            sendMessage(result);
-                        });
-                        task.Start();
+                        }
+                        catch (Exception e)
+                        {
+                            break;
+                        }
                     }
-                } catch (Exception e)
-                {
-                    Console.WriteLine("catch");
-                }
+                });
+                task.Start();
             }
-            client.Close();
+            catch (Exception e)
+            {
+                Console.WriteLine("catch");
+            }
+            //client.Close();
         }
 
         public static ClientCommSingelton getInstance()
@@ -63,9 +73,9 @@ namespace ImageServiceGUI.communication
             return instance;
         }
 
-        public void sendMessage(string message)
+        public void sendMessage(string message, int id)
         {
-            writer.WriteLine(message);
+            writer.Write(ToJson(id, message));
         }
 
         public string receiveMessage(string data)
@@ -82,14 +92,31 @@ namespace ImageServiceGUI.communication
             return result;
         }
 
+        public String ToJson(int command, string message)
+        {
+            JObject dataObj = new JObject();
+            dataObj["Id"] = command;
+            dataObj["Args"] = message;
+            return JsonConvert.SerializeObject(dataObj);
+        }
+
         public DataRecivedEventArgs FromJson(string data)
         {
-            JObject dataObj = JObject.Parse(data);
+            JObject dataObj = JsonConvert.DeserializeObject<JObject>(data);
             int id = (int)dataObj["Id"];
             string args = (string)dataObj["Args"];
 
             DataRecivedEventArgs dataArgs = new DataRecivedEventArgs(id, args);
             return dataArgs;
+        }
+
+        public bool Connected
+        {
+            get { return this.client.Connected; }
+            set
+            {
+                this.Connected = value;
+            }
         }
     }
 }

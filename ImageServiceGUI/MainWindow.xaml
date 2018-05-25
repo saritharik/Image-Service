@@ -6,19 +6,24 @@
         xmlns:local="clr-namespace:ImageServiceGUI"
         xmlns:uc="clr-namespace:ImageServiceGUI.Views"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="206*"/>
-            <RowDefinition Height="213*"/>
-        </Grid.RowDefinitions>
-        <TabControl HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top" Width="792" Grid.RowSpan="2">
+        Title="MainWindow" Height="Auto" Width="810">
+    <Window.Resources>
+        <local:BrushColorConverter x:Key="BrushColorConvert"/>
+    </Window.Resources>
+    <Window.Style>
+        <Style TargetType="{x:Type Window}">
+            <Setter Property="Background" Value="{Binding Path=Connected, Converter={StaticResource BrushColorConvert}}"/>
+        </Style>
+    </Window.Style>
+    <TabControl HorizontalAlignment="Left" Height="Auto" VerticalAlignment="Top" Width="792" Grid.RowSpan="2">
             <TabItem Header="Settings" Margin="-2,0" Height="22" VerticalAlignment="Bottom">
                 <uc:SettingsView/>
             </TabItem>
-            <TabItem Header="Logs" Margin="3,0,-3,0" Height="22" VerticalAlignment="Top">
+            <TabItem Header="Logs" Margin="3,0,-3,0" Height="22" VerticalAlignment="Bottom">
                 <uc:LogView/>
             </TabItem>
         </TabControl>
-    </Grid>
+    
+    
 </Window>
+
