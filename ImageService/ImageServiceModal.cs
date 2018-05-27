@@ -1,5 +1,4 @@
-﻿using ImageService.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -11,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Configuration;
 using ImageService.Logging;
-using ImageService.Logging.Modal;
+using Infrastructure;
 
 namespace ImageService.Modal
 {

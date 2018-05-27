@@ -33,3 +33,5 @@ C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\Newtonsoft.Jso
 C:\Users\תמר\Source\Repos\Image-Service\ImageService\obj\Debug\ImageService.csproj.CopyComplete
 C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\Communication.dll
 C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\Communication.pdb
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\Infrastructure.dll
+C:\Users\תמר\Source\Repos\Image-Service\ImageService\bin\Debug\Infrastructure.pdb

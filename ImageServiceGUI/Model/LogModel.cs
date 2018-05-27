@@ -1,7 +1,6 @@
 ﻿using Communication;
-using ImageService.Infrastructure.Enums;
-using ImageService.Logging.Modal;
 using ImageServiceGUI.communication;
+using Infrastructure;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -25,6 +24,9 @@ namespace ImageServiceGUI.Model
         }
         #endregion
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public LogModel()
         {
             LogMessages = new ObservableCollection<MessageRecievedEventArgs>();
@@ -34,6 +36,9 @@ namespace ImageServiceGUI.Model
         }
 
         private ObservableCollection<MessageRecievedEventArgs> log_messages;
+        /// <summary>
+        /// LogMessages property.
+        /// </summary>
         public ObservableCollection<MessageRecievedEventArgs> LogMessages
         {
             get { return log_messages; }
@@ -44,6 +49,12 @@ namespace ImageServiceGUI.Model
             }
         }
 
+        /// <summary>
+        /// Check if the command id is log command, and according to
+        /// command id append the log message to list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="dataArgs"></param>
         public void GetMessage(object sender, DataRecivedEventArgs dataArgs)
         {
             if (dataArgs.CommandID == (int)CommandEnum.LogCommand)
@@ -54,6 +65,11 @@ namespace ImageServiceGUI.Model
             }
         }
 
+        /// <summary>
+        /// Convert message to MessageRecievedEventArgs with json.
+        /// </summary>
+        /// <param name="args">to convert</param>
+        /// <returns>MessageRecievedEventArgs</returns>
         public MessageRecievedEventArgs FromJson(string args)
         {
             MessageTypeEnum messageType = MessageTypeEnum.INFO;

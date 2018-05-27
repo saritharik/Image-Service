@@ -1,6 +1,5 @@
 ﻿using Communication;
-using ImageService.Infrastructure.Enums;
-using ImageService.Logging.Modal;
+using Infrastructure;
 using ImageService.Modal;
 using ImageServiceGUI.communication;
 using Newtonsoft.Json;
@@ -28,20 +27,33 @@ namespace ImageServiceGUI.Model
         }
         #endregion
 
+        private bool update;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public SettingsModel()
         {
+            this.update = false;
             handlers = new ObservableCollection<string>();
             Object handlersLock = new Object();
             BindingOperations.EnableCollectionSynchronization(handlers, handlersLock);
-            //Thread.Sleep(1000);
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
             ClientCommSingelton.getInstance().DataReceived += GetRemoveMessage;
+            if (ClientCommSingelton.getInstance().Connected)
+            {
+                while (!update) { }
+            }
         }
 
-        private string output_directory;// = "outputDirectory";
+        private string output_directory;
+        /// <summary>
+        /// OutputDirectory property.
+        /// </summary>
         public string OutputDirectory
         {
-            get { return output_directory; }
+            get {
+                return output_directory; }
             set
             {
                 output_directory = value;
@@ -49,7 +61,10 @@ namespace ImageServiceGUI.Model
             }
         }
 
-        private string source_name;// = "sourceName";
+        private string source_name;
+        /// <summary>
+        /// SourceName property.
+        /// </summary>
         public string SourceName
         {
             get { return source_name; }
@@ -60,7 +75,10 @@ namespace ImageServiceGUI.Model
             }
         }
 
-        private string log_name;// = "logName";
+        private string log_name;
+        /// <summary>
+        /// LogName property.
+        /// </summary>
         public string LogName
         {
             get { return log_name; }
@@ -71,7 +89,10 @@ namespace ImageServiceGUI.Model
             }
         }
 
-        private string thumbnail_size;// = "120";
+        private string thumbnail_size;
+        /// <summary>
+        /// ThumbnailSize property.
+        /// </summary>
         public string ThumbnailSize
         {
             get { return thumbnail_size; }
@@ -83,6 +104,9 @@ namespace ImageServiceGUI.Model
         }
 
         private string selected_handler;
+        /// <summary>
+        /// SelectedHandler property.
+        /// </summary>
         public string SelectedHandler
         {
             get { return selected_handler; }
@@ -94,7 +118,9 @@ namespace ImageServiceGUI.Model
         }
 
         private ObservableCollection<String> handlers;
-        
+        /// <summary>
+        /// Handlers property.
+        /// </summary>
         public ObservableCollection<String> Handlers
         {
             get { return handlers; }
@@ -104,21 +130,19 @@ namespace ImageServiceGUI.Model
             }
         }
 
+        /// <summary>
+        /// remove the selected handler with the server
+        /// </summary>
         public void RemoveHandlerCommand()
         {
-            // remove the selected handler with the server
             ClientCommSingelton.getInstance().sendMessage(selected_handler, (int)CommandEnum.CloseCommand);            
         }
 
-        /*public string ToJSON(CommandRecievedEventArgs args)
-        {
-            JObject commandObj = new JObject();
-            commandObj["CommandID"] = args.CommandID;
-            commandObj["Args"] = args.Args[0];
-            commandObj["Path"] = args.RequestDirPath;
-            return commandObj.ToString();
-        }*/
-
+        /// <summary>
+        /// Check if the message it's a settings message.
+        /// </summary>
+        /// <param name="sender">the object that active the event</param>
+        /// <param name="dataArgs">event args</param>
         public void GetMessage(object sender, DataRecivedEventArgs dataArgs)
         {
             if (dataArgs.CommandID == (int)CommandEnum.GetConfigCommand)
@@ -128,6 +152,11 @@ namespace ImageServiceGUI.Model
             }
         }
 
+        /// <summary>
+        /// Check if the message it's a remove message.
+        /// </summary>
+        /// <param name="sender">the object that active the event</param>
+        /// <param name="dataArgs">event args</param>
         public void GetRemoveMessage(object sender, DataRecivedEventArgs dataArgs)
         {
             if (dataArgs.CommandID == (int)CommandEnum.CloseCommand)
@@ -138,6 +167,11 @@ namespace ImageServiceGUI.Model
                 }
             }
         }
+
+        /// <summary>
+        /// Convert message with json.
+        /// </summary>
+        /// <param name="data">to convert</param>
         public void FromJson(string data)
         {
             JObject configObj = JsonConvert.DeserializeObject<JObject>(data);// JObject.Parse(args);
@@ -152,6 +186,7 @@ namespace ImageServiceGUI.Model
             {
                 handlers.Add(path);
             }
+            update = true;
         }
 
     }

@@ -52,13 +52,13 @@
 
 
         </Grid.Resources>
-        <TextBlock Style="{StaticResource TextBlock}"
+        <TextBlock x:Name="OutputDirectory" Style="{StaticResource TextBlock}"
                    Text="{Binding OutputDirectory, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="230,65,0,0"></TextBlock>
-        <TextBlock Style="{StaticResource TextBlock}"
+        <TextBlock x:Name="SourceName" Style="{StaticResource TextBlock}"
                    Text="{Binding SourceName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="230,100,0,0"></TextBlock>
-        <TextBlock Style="{StaticResource TextBlock}"
+        <TextBlock x:Name="LogName" Style="{StaticResource TextBlock}"
                    Text="{Binding LogName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="230,135,0,0"></TextBlock>
-        <TextBlock Style="{StaticResource TextBlock}"
+        <TextBlock x:Name="ThumbnailSize" Style="{StaticResource TextBlock}"
                    Text="{Binding ThumbnailSize, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Margin="230,170,0,0"></TextBlock>
         <Button x:Name="RemoveButton"
                 Content="Remove"

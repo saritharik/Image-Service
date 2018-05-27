@@ -9,35 +9,39 @@ using System.Text;
 using System.Threading.Tasks;
 using Communication;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace ImageServiceGUI.communication
 {
     class ClientCommSingelton : ITcpCommunication
     {
+        #region members
         private static ClientCommSingelton instance = null;
         private TcpClient client;
         private NetworkStream stream;
         private BinaryReader reader;
         private BinaryWriter writer;
+        #endregion
 
+        // DateReceived event.
         public event EventHandler<DataRecivedEventArgs> DataReceived;
-
+        Mutex mut = new Mutex();
+        /// <summary>
+        /// Private constructor - to singelton class.
+        /// </summary>
         private ClientCommSingelton()
         {
+            mut = new Mutex();
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
             this.client = new TcpClient();
             try
             {
                 client.Connect(ep);
-                //this.Connected = true;
-            } catch (Exception e)
-            {
-                //this.Connected = false;
-            }
-            Console.WriteLine("You are connected");
-            this.stream = client.GetStream();
-            this.reader = new BinaryReader(stream);
-            this.writer = new BinaryWriter(stream);
+                Console.WriteLine("You are connected");
+                this.stream = client.GetStream();
+                this.reader = new BinaryReader(stream);
+                this.writer = new BinaryWriter(stream);
+            } catch (Exception e) { }
             try
             {
                 Task task = new Task(() =>
@@ -46,7 +50,9 @@ namespace ImageServiceGUI.communication
                     {
                         try
                         {
+                            //mut.WaitOne();
                             string data = reader.ReadString();
+                            //mut.ReleaseMutex();
                             string result = receiveMessage(data);
                         }
                         catch (Exception e)
@@ -64,6 +70,10 @@ namespace ImageServiceGUI.communication
             //client.Close();
         }
 
+        /// <summary>
+        /// getInstance method for singelton class.
+        /// </summary>
+        /// <returns>Instance of this object</returns>
         public static ClientCommSingelton getInstance()
         {
             if (instance == null)
@@ -73,11 +83,24 @@ namespace ImageServiceGUI.communication
             return instance;
         }
 
+        /// <summary>
+        /// Send message according to arguments.
+        /// </summary>
+        /// <param name="message">the message to send</param>
+        /// <param name="id">the id of the command</param>
         public void sendMessage(string message, int id)
         {
+            //mut.WaitOne();
             writer.Write(ToJson(id, message));
+            writer.Flush();
+            //mut.ReleaseMutex();
         }
 
+        /// <summary>
+        /// Receive message.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>the data</returns>
         public string receiveMessage(string data)
         {
             string result = "succeeded";
@@ -92,6 +115,12 @@ namespace ImageServiceGUI.communication
             return result;
         }
 
+        /// <summary>
+        /// Convert message with jsom.
+        /// </summary>
+        /// <param name="command">id command</param>
+        /// <param name="message">arguments for command</param>
+        /// <returns></returns>
         public String ToJson(int command, string message)
         {
             JObject dataObj = new JObject();
@@ -100,6 +129,11 @@ namespace ImageServiceGUI.communication
             return JsonConvert.SerializeObject(dataObj);
         }
 
+        /// <summary>
+        /// Convert message to DataRecivedEventArgs with json.
+        /// </summary>
+        /// <param name="data">to convert</param>
+        /// <returns>DataRecivedEventArgs</returns>
         public DataRecivedEventArgs FromJson(string data)
         {
             JObject dataObj = JsonConvert.DeserializeObject<JObject>(data);
@@ -110,6 +144,9 @@ namespace ImageServiceGUI.communication
             return dataArgs;
         }
 
+        /// <summary>
+        /// Check if the connection successful.
+        /// </summary>
         public bool Connected
         {
             get { return this.client.Connected; }

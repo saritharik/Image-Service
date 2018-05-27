@@ -1,6 +1,6 @@
 ﻿using ImageService.Controller;
 using ImageService.Controller.Handlers;
-using ImageService.Infrastructure.Enums;
+using Infrastructure;
 using ImageService.Logging;
 using ImageService.Modal;
 using System;
@@ -12,7 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Configuration;
 using ImageService.communication;
-using ImageService.Logging.Modal;
 using System.Net.Sockets;
 using System.Net;
 using System.Collections.ObjectModel;
@@ -50,7 +49,7 @@ namespace ImageService.Server
             m_controller = new ImageController(imageServiceModal);
             logMessages = new ObservableCollection<MessageRecievedEventArgs>();
             handlersList = new Dictionary<String, IDirectoryHandler>();
-            m_logging.MessageRecieved += newLogMsg;
+            m_logging.MessageRecieved += NewLogMsg;
 
             string directories = ConfigurationManager.AppSettings["Handler"];
             string[] pathes = directories.Split(';');
@@ -59,15 +58,17 @@ namespace ImageService.Server
                 createHandler(path);
             }
 
-            ServerCommSingelton.getInstance().DataReceived += removeHandler;
+            ServerCommSingelton.getInstance().DataReceived += RemoveHandler;
 
             this.port = 8000;
 
-            startTcpCommunication();
+            StartTcpCommunication();
         }
 
-
-        public void startTcpCommunication()
+        /// <summary>
+        /// Start tcp communication.
+        /// </summary>
+        public void StartTcpCommunication()
         {
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), this.port);
             this.listener = new TcpListener(ep);
@@ -82,15 +83,15 @@ namespace ImageService.Server
                         TcpClient client = listener.AcceptTcpClient();
                         clients.Add(client);
                         Console.WriteLine("Got new connection");
-                        Thread.Sleep(1000);
-                        sendConfig(client);
+                        Thread.Sleep(500);
+                        SendConfig(client);
                         ServerCommSingelton.getInstance().receiveMessage(client);
                         foreach (MessageRecievedEventArgs msg in logMessages)
                         {
-                            sendLogsList(msg, client);
+                            SendLogsList(msg, client);
                             ServerCommSingelton.getInstance().receiveMessage(client);
                         }
-                        ServerCommSingelton.getInstance().sendMessage(handlerToJson(), client);
+                        ServerCommSingelton.getInstance().sendMessage(HandlerToJson(), client);
 
                         Task clientTask = new Task(() => {
                             ServerCommSingelton.getInstance().receiveMessage(client);
@@ -109,7 +110,11 @@ namespace ImageService.Server
             task.Start();
         }
 
-        public void sendConfig(TcpClient client)
+        /// <summary>
+        /// Send the app configuration details.
+        /// </summary>
+        /// <param name="client"> the client to send the information</param>
+        public void SendConfig(TcpClient client)
         {
             string handlers = "";
             foreach (KeyValuePair<String, IDirectoryHandler> handler in handlersList)
@@ -130,26 +135,41 @@ namespace ImageService.Server
             ServerCommSingelton.getInstance().settingsMessage(config, client);
         }
 
-        public void sendLogsList(MessageRecievedEventArgs msgArgs, TcpClient client)
+        /// <summary>
+        /// Send the log list, since service start.
+        /// </summary>
+        /// <param name="msgArgs"></param>
+        /// <param name="client"></param>
+        public void SendLogsList(MessageRecievedEventArgs msgArgs, TcpClient client)
         {
             ServerCommSingelton.getInstance().logMessage(msgArgs, client);
         }
-
-        public void newLogMsg(object sender, MessageRecievedEventArgs msg)
+        
+        /// <summary>
+        /// Save the log message to list, and send them to clients.
+        /// </summary>
+        /// <param name="sender"> the object that active the event</param>
+        /// <param name="msg">the log message</param>
+        public void NewLogMsg(object sender, MessageRecievedEventArgs msg)
         {
             List<TcpClient> toRemove = new List<TcpClient>();
 
             logMessages.Add(msg);
             foreach (TcpClient client in clients)
             {
-                try
+                Task task = new Task(() =>
                 {
-                    ServerCommSingelton.getInstance().logMessage(msg, client);
-                    ServerCommSingelton.getInstance().receiveMessage(client);
-                } catch (Exception)
-                {
-                    toRemove.Add(client);
-                }
+                    try
+                    {
+                        ServerCommSingelton.getInstance().logMessage(msg, client);
+                        ServerCommSingelton.getInstance().receiveMessage(client);
+                    }
+                    catch (Exception)
+                    {
+                        toRemove.Add(client);
+                    }
+                });
+                task.Start();
 
             }
 
@@ -163,7 +183,12 @@ namespace ImageService.Server
             toRemove.Clear();
         }
 
-        public void removeHandler(object sender, DataRecivedEventArgs dataArgs)
+        /// <summary>
+        /// Ramove handler from the dictionry.
+        /// </summary>
+        /// <param name="sender"> the object that active the event</param>
+        /// <param name="dataArgs">the event arguments</param>
+        public void RemoveHandler(object sender, DataRecivedEventArgs dataArgs)
         {
             if (dataArgs.CommandID == (int)CommandEnum.CloseCommand)
             {
@@ -179,7 +204,8 @@ namespace ImageService.Server
                     {
                         try
                         {
-                            ServerCommSingelton.getInstance().sendMessage(removeHandlerToJson(dataArgs.Args), client);
+                            Thread.Sleep(1000);
+                            ServerCommSingelton.getInstance().sendMessage(RemoveHandlerToJson(dataArgs.Args), client);
                             ServerCommSingelton.getInstance().receiveMessage(client);
                         } catch (Exception)
                         {
@@ -202,7 +228,11 @@ namespace ImageService.Server
             }
         }
 
-        public String handlerToJson()
+        /// <summary>
+        /// Convert the message with json.
+        /// </summary>
+        /// <returns>the convert message</returns>
+        public String HandlerToJson()
         {
             JObject dataObj = new JObject();
             dataObj["Id"] = (int)CommandEnum.CloseCommand;
@@ -210,7 +240,12 @@ namespace ImageService.Server
             return JsonConvert.SerializeObject(dataObj);
         }
 
-        public string removeHandlerToJson(string path)
+        /// <summary>
+        /// Convert the remove message with json.
+        /// </summary>
+        /// <param name="path">the path to execute command</param>
+        /// <returns>the convert message</returns>
+        public string RemoveHandlerToJson(string path)
         {
             JObject dataObj = new JObject();
             dataObj["Id"] = (int)CommandEnum.CloseCommand;

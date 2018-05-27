@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Logging.Modal
+namespace Infrastructure
 {
     /// <summary>
     /// Represents the type of information transferred

@@ -10,6 +10,9 @@ namespace ImageServiceGUI.ViewModel
     class MainWindowViewModel
     {
         private bool connected;
+        /// <summary>
+        /// Connected property.
+        /// </summary>
         public bool Connected
         {
             get { return this.connected; }
@@ -19,6 +22,9 @@ namespace ImageServiceGUI.ViewModel
             }
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public MainWindowViewModel()
         {
             this.connected = ClientCommSingelton.getInstance().Connected;

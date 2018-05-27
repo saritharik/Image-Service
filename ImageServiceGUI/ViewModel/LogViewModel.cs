@@ -1,6 +1,4 @@
 ﻿using Communication;
-using ImageService.Infrastructure.Enums;
-using ImageService.Logging.Modal;
 using ImageServiceGUI.communication;
 using ImageServiceGUI.Model;
 using Newtonsoft.Json.Linq;
@@ -11,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure;
 
 namespace ImageServiceGUI.ViewModel
 {
@@ -20,6 +19,9 @@ namespace ImageServiceGUI.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
         #endregion
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public LogViewModel()
         {
             this.LogModel = new LogModel();
@@ -28,14 +30,24 @@ namespace ImageServiceGUI.ViewModel
             };
         }
 
+        /// <summary>
+        /// NotifyPropertyChanged event.
+        /// </summary>
+        /// <param name="name"></param>
         protected void NotifyPropertyChanged(string name)
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(name));
         }
+
+        /// <summary>
+        /// LogModel property.
+        /// </summary>
         public LogModel LogModel { get; set; }
 
-        //private ObservableCollection<MessageRecievedEventArgs> log_messages;
+        /// <summary>
+        /// LogMessages property.
+        /// </summary>
         public ObservableCollection<MessageRecievedEventArgs> LogMessages
         {
             get { return this.LogModel.LogMessages; }
