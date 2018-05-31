@@ -1,0 +1,22 @@
+﻿@model IEnumerable<ImageServiceWebApp.Models.ConfigModel>
+@{
+    ViewBag.Title = "Config";
+}
+
+<h2>Config</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.OutputDirectory)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LogName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SourceName)
+        </th>
+    </tr>
+
+</table>
+
