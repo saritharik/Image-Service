@@ -107,3 +107,16 @@ Affected parameters are:
    logtoconsole = 
    logfile = C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\ImageService.InstallLog
    assemblypath = C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe
+Installing assembly 'C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe
+   logfile = C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\ImageService.InstallLog
+Installing service ImageService...
+Service ImageService has been successfully installed.
+Creating EventLog source ImageService in log Application...
+Committing assembly 'C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\ImageService.exe
+   logfile = C:\Users\תמר\source\repos\Image-Service\ImageService\bin\Debug\ImageService.InstallLog

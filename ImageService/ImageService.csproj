@@ -53,11 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandEnum.cs" />
-    <Compile Include="CommandRecievedEventArgs.cs" />
     <Compile Include="communication\ServerCommSingelton.cs" />
     <Compile Include="DirectoryCloseEventArgs.cs" />
-    <Compile Include="DirectoyHandler.cs" />
+    <Compile Include="DirectoryHandler.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IDirectoryHandler.cs" />
     <Compile Include="IImageController.cs" />
@@ -75,8 +73,6 @@
     </Compile>
     <Compile Include="ImageServiceModal.cs" />
     <Compile Include="LoggingService.cs" />
-    <Compile Include="MessageRecievedEventArgs.cs" />
-    <Compile Include="MessageTypeEnum.cs" />
     <Compile Include="NewFileCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
@@ -94,15 +90,21 @@
   <ItemGroup>
     <EmbeddedResource Include="ImageService.resx">
       <DependentUpon>ImageService.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Communication\Communication.csproj">
       <Project>{126F44AA-4BDD-4790-8CE1-9A7F516FA038}</Project>
       <Name>Communication</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
+      <Project>{F4A63CF6-341F-406E-841C-28279795D41C}</Project>
+      <Name>Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

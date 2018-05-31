@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Logging.Modal
+namespace Infrastructure
 {
     public class MessageRecievedEventArgs : EventArgs
     {
@@ -19,6 +19,11 @@ namespace ImageService.Logging.Modal
             set /*{ Message = value; }*/;
         }
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="status"></param>
+        /// <param name="message"></param>
         public MessageRecievedEventArgs(MessageTypeEnum status, string message)
         {
             Status = status;

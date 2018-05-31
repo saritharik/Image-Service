@@ -6,33 +6,42 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using System.Net;
 using Communication;
-using ImageService.Infrastructure.Enums;
 using Newtonsoft.Json.Linq;
-using ImageService.Logging.Modal;
+using Infrastructure;
 using System.IO;
+using Newtonsoft.Json;
+using System.Threading;
 
 namespace ImageService.communication
 {
-    class ServerCommSingelton// : ITcpCommunication
+    class ServerCommSingelton
     {
+        #region members
         private static ServerCommSingelton instance = null;
-        //private int port;
-        //private TcpListener listener;
-        //private IClientHandler ch;
 
         private NetworkStream stream;
-        private StreamReader reader;
-        private StreamWriter writer;
+        private BinaryReader reader;
+        private BinaryWriter writer;
+        #endregion
 
+        /// <summary>
+        /// Data recived event.
+        /// </summary>
         public event EventHandler<DataRecivedEventArgs> DataReceived;
+        private static Mutex mut;
 
-        private ServerCommSingelton(/*int port, IClientHandler ch*/)
+        /// <summary>
+        /// Private constructor - to singelton class.
+        /// </summary>
+        private ServerCommSingelton()
         {
-            //this.port = 8000;
-            //this.ch = new ClientHandler();
-            //this.DataReceived += ConvertMsg;
+            mut = new Mutex();
         }
 
+        /// <summary>
+        /// getInstance method for singelton class.
+        /// </summary>
+        /// <returns>Instance of this object</returns>
         public static ServerCommSingelton getInstance()
         {
             if (instance == null)
@@ -42,33 +51,44 @@ namespace ImageService.communication
             return instance;
         }
 
-         /*public void Stop()
-         {
-             listener.Stop();
-         }*/
-
+       
+        /// <summary>
+        /// Send the recived message to the client.
+        /// </summary>
+        /// <param name="message">the message to send</param>
+        /// <param name="client">the client to send him the message</param>
         public void sendMessage(string message, TcpClient client)
         {
             stream = client.GetStream();
-            writer = new StreamWriter(stream);
+            writer = new BinaryWriter(stream);
             try
             {
-                writer.WriteLine(message);
+                //mut.WaitOne();
+                writer.Write(message);
+                writer.Flush();
+                //mut.ReleaseMutex();
             } catch (IOException e)
             {
                 Console.WriteLine(e.ToString());
             }
-            
         }
 
+        /// <summary>
+        /// Rececive message from the client.
+        /// </summary>
+        /// <param name="client">the client that send the message</param>
+        /// <returns>the message</returns>
         public string receiveMessage(TcpClient client)
         {
             stream = client.GetStream();
-            reader = new StreamReader(stream);
+            reader = new BinaryReader(stream);
             string message;
             try
             {
-                message = reader.ReadLine();
+                //mut.WaitOne();
+                message = reader.ReadString();
+                //mut.ReleaseMutex();
+                DataReceived?.Invoke(this, fromJsonRecvCommand(message));
             }
             catch (IOException e)
             {
@@ -78,22 +98,39 @@ namespace ImageService.communication
             return message;
         }
 
-        /*public void ConvertMsg(object sender, DataRecivedEventArgs args, )
+        /// <summary>
+        /// Convert message with json.
+        /// </summary>
+        /// <param name="id">Command if</param>
+        /// <param name="data">the arguments</param>
+        /// <param name="client">the client to send him the message</param>
+        public void ConvertMsg(int id, string data, TcpClient client)
         {
             JObject dataObj = new JObject();
-            dataObj["Id"] = args.CommandID;
-            dataObj["Args"] = args.Args;
-            sendMessage(dataObj.ToString());
-        }*/
+            dataObj["Id"] = id;
+            dataObj["Args"] = data;
+            sendMessage(JsonConvert.SerializeObject(dataObj), client);
+        }
 
+        /// <summary>
+        /// The function that activated when get new log message and
+        /// convert the log message with json to send the message.
+        /// </summary>
+        /// <param name="data">MessageRecievedEventArgs</param>
+        /// <param name="client">the client to send him the message</param>
         public void logMessage(MessageRecievedEventArgs data, TcpClient client)
         {
             JObject logObj = new JObject();
             logObj["Type"] = data.Status.ToString();
             logObj["Message"] = data.Message;
-            sendMessage(logObj.ToString(), client);
+            ConvertMsg((int)CommandEnum.LogCommand, JsonConvert.SerializeObject(logObj), client);
         }
 
+        /// <summary>
+        /// Send the settings message.
+        /// </summary>
+        /// <param name="data">the settings.</param>
+        /// <param name="client">the client to send him the message</param>
         public void settingsMessage(string[] data, TcpClient client)
         {
             JObject configObj = new JObject();
@@ -102,10 +139,19 @@ namespace ImageService.communication
             configObj["SourceName"] = data[2];
             configObj["LogName"] = data[3];
             configObj["ThumbnailSize"] = data[4];
-
-            sendMessage(configObj.ToString(), client);
+            ConvertMsg((int)CommandEnum.GetConfigCommand, JsonConvert.SerializeObject(configObj), client);
         }
 
-
+        /// <summary>
+        /// Convert the message to DataRecivedEventArgs with json.
+        /// </summary>
+        /// <param name="data">to convert</param>
+        /// <returns>DataRecivedEventArgs</returns>
+        public DataRecivedEventArgs fromJsonRecvCommand(string data)
+        {
+            JObject recv = JsonConvert.DeserializeObject<JObject>(data);
+            DataRecivedEventArgs dataArgs = new DataRecivedEventArgs((int)recv["Id"], (string)recv["Args"]);
+            return dataArgs;
+        }
     }
 }

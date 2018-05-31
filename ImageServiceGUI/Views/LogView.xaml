@@ -7,22 +7,35 @@
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
 
-
     <Grid x:Name="log">
-        <TextBlock HorizontalAlignment="Left" Margin="334,10,0,0" TextWrapping="Wrap"
-                   Text="Logs" FontSize="35"
-                   VerticalAlignment="Top"></TextBlock>
-        <DataGrid ItemsSource="{Binding LogMessages}" AutoGenerateColumns="False" Margin="0,62,0,0" >
+        <Grid.Resources>
+            <Style x:Key="TextBlock">
+                <Setter Property="TextBlock.FontSize" Value="35"/>
+                <Setter Property="TextBlock.FontStyle" Value="Italic"/>
+                <Setter Property="TextBlock.Text" Value="Logs"/>
+                <Setter Property="TextBlock.FontWeight" Value="ExtraBold"/>
+                <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+                <Setter Property="TextBlock.VerticalAlignment" Value="Top"/>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+                <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+                <Setter Property="TextBlock.TextAlignment" Value="Center"/>
+                <Setter Property="TextBlock.Background" Value="Coral"/>
+            </Style>
+        </Grid.Resources>
+
+        <TextBlock Grid.Row="0" Style="{StaticResource TextBlock}" Margin="0,2,0,0" Width="800" Height="60"/>
+
+        <DataGrid ItemsSource="{Binding LogMessages}" AutoGenerateColumns="False" Margin="0,62,0,0">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Type">
+                <DataGridTextColumn Header="Type" Width="Auto" IsReadOnly="True" Binding="{Binding Status}" >
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Value="{Binding Path=LogMessages.status}" Property="Background"></Setter>
+                            <Setter Value="{Binding Path=Status}" Property="Background"></Setter>
                             <Style.Triggers>
                                 <Trigger Property="Text" Value="INFO">
                                     <Setter Property="Background" Value="Green"/>
                                 </Trigger>
-                                <Trigger Property="Text" Value="ERROR">
+                                <Trigger Property="Text" Value="FAIL">
                                     <Setter Property="Background" Value="Red"/>
                                 </Trigger>
                                 <Trigger Property="Text" Value="WARNING">
@@ -32,8 +45,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Message" Binding="{Binding LogMessages}"
-                                        IsReadOnly="True"/>
+                <DataGridTextColumn Header="Message" Width="*" Binding="{Binding Message}" IsReadOnly="True"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

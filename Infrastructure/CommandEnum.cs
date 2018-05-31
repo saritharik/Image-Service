@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImageService.Infrastructure.Enums
+namespace Infrastructure
 {
     /// <summary>
     /// Repressents the specific command that send.

@@ -21,9 +21,11 @@ namespace ImageServiceGUI.Views
     /// </summary>
     public partial class SettingsView : UserControl
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public SettingsView()
         {
-
             InitializeComponent();
             this.DataContext = new SettingsViewModel();
         }
