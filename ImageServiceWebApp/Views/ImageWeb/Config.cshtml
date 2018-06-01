@@ -1,22 +1,20 @@
-﻿@model IEnumerable<ImageServiceWebApp.Models.ConfigModel>
+﻿@model ImageServiceWebApp.Models.ConfigModel
 @{
     ViewBag.Title = "Config";
 }
 
 <h2>Config</h2>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.OutputDirectory)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LogName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.SourceName)
-        </th>
-    </tr>
+<div>
+    <p>Output Directory: @Model.OutputDirectory</p>
+    <p>Source Name: @Model.SourceName</p>
+    <p>Log Name: @Model.LogName</p>
+    <p>Thumbnail Size: @Model.ThumbnailSize</p>
+</div>
 
-</table>
+@foreach (var handler in Model.Handlers)
+{
+    <li>@Html.ActionLink(handler, "RemoveHandler", "ImageWeb")</li>
+}
 
+<!--Handlers-->

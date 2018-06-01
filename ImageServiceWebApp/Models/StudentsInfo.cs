@@ -16,7 +16,7 @@ namespace ImageServiceWebApp.Models
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "ID")]
-        public int ID { get; set; }
+        public string ID { get; set; }
 
         [Required]
         [DataType(DataType.Text)]

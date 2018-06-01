@@ -1,25 +1,23 @@
-﻿@model IEnumerable<ImageServiceWebApp.Models.StudentsInfo>
+﻿@model ImageServiceWebApp.Models.ImageWebModel
+
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
 Welcome To Image Service App!!!
-
+<br><br />
+<p>Server Status: @Model.ServerConnected</p>
+<p>The number of photos in output directory is: @Model.NumberPictuers</p>
+<br><br />
 <table class="table">
     <tr>
 
-        <th>
-            @Html.DisplayNameFor(model => model.ID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
+        <th>ID</th>
+        <th>First Name</th>
+        <th>Last Name</th>
     </tr>
-    @foreach (var item in Model)
+    @foreach (var item in Model.Students)
     {
         <tr>
             <td>

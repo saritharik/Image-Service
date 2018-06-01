@@ -16,10 +16,8 @@ namespace ImageServiceWebApp.Models
     {
         public ConfigModel()
         {
+            this.Handlers = new List<string>();
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
-            this.OutputDirectory = "output";
-            this.SourceName = "source";
-            this.LogName = "log";
         }
 
 
@@ -46,7 +44,7 @@ namespace ImageServiceWebApp.Models
         [Required]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Handlers")]
-        public ObservableCollection<string> Handlers { get; set; }
+        public List<string> Handlers { get; set; }
 
 
 
