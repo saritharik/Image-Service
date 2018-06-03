@@ -1,0 +1,20 @@
+﻿@model ImageServiceWebApp.Models.ConfigModel
+@{
+    ViewBag.Title = "Config";
+}
+
+<h2>Config</h2>
+
+<div>
+    <p>Output Directory: @Model.OutputDirectory</p>
+    <p>Source Name: @Model.SourceName</p>
+    <p>Log Name: @Model.LogName</p>
+    <p>Thumbnail Size: @Model.ThumbnailSize</p>
+</div>
+
+@foreach (var handler in Model.Handlers)
+{
+    <li>@Html.ActionLink(handler, "RemoveHandler", "ImageWeb")</li>
+}
+
+<!--Handlers-->

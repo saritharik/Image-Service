@@ -1,0 +1,13 @@
+﻿@model ImageServiceWebApp.Models.LogModel
+
+@{
+    ViewBag.Title = "Logs";
+}
+
+<h2>Logs</h2>
+
+@foreach (var log in Model.Logs)
+{
+    <li>@log.Message</li>
+}
+

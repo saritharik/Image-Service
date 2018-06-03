@@ -1,3 +1,9 @@
+commit a059a3b5e56912852aded95cab23547bde965389
+Author: tamar emanuel <tamarema@gmail.com>
+Date:   Sun May 27 19:18:59 2018 +0300
+
+    Finish ex2
+
 commit 9696e1b5817ab029580ac540073a143737df0b9c
 Author: tamar emanuel <tamarema@gmail.com>
 Date:   Fri May 25 15:43:53 2018 +0300
