@@ -60,6 +60,36 @@ namespace ImageServiceWebApp.Controllers
             return RedirectToAction("Config");
         }
 
+        public ActionResult ShowPhoto(int infoID)
+        {
+            foreach (PhotoInfo photo in photosModel.PhotosInfo)
+            {
+                if (photo.ID == infoID)
+                {
+                    return View(photo);
+                }
+            }
+            return View();
+        }
+
+        public ActionResult RemovePhoto(int infoID)
+        {
+            foreach (PhotoInfo photo in photosModel.PhotosInfo)
+            {
+                if (photo.ID == infoID)
+                {
+                    return View(photo);
+                }
+            }
+            return View();
+        }
+
+        public ActionResult RemovePhotoFromDirectory(int infoID)
+        {
+            photosModel.RemovePhoto(infoID);
+            return RedirectToAction("Photos");
+        }
+
         public int CountImages(string OutputDirPath)
         {
             string[] directoryFiles = Directory.GetFiles(OutputDirPath);

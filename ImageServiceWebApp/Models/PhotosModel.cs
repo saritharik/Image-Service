@@ -17,14 +17,14 @@ namespace ImageServiceWebApp.Models
         private string outputDir;
         public PhotosModel()
         {
-            PhotosNames = new List<String>();
+            PhotosInfo = new List<PhotoInfo>();
             ClientCommSingelton.getInstance().DataReceived += GetNameOutputDir;
         }
 
         [Required]
         [DataType(DataType.MultilineText)]
-        [Display(Name = "PhotosNames")]
-        public List<String> PhotosNames { get ; set; }
+        [Display(Name = "PhotosInfo")]
+        public List<PhotoInfo> PhotosInfo { get ; set; }
 
         public void GetNameOutputDir(object sender, DataRecivedEventArgs dataArgs)
         {
@@ -45,15 +45,48 @@ namespace ImageServiceWebApp.Models
         public void GetPhotos(string directory)
         {
             var files = Directory.GetFiles(directory + "\\" + "Thumbnails", "*.*", SearchOption.AllDirectories);
+            int i = 0;
             foreach (string filename in files)
             {
-                this.PhotosNames.Add(filename);
+                String[] split = filename.Split('\\');
+                int length = split.Length;
+                this.PhotosInfo.Add(new PhotoInfo { Path = filename, Month = Int32.Parse(split[length - 2]),
+                    Year = Int32.Parse(split[length - 3]),
+                    Name = split[length - 1], ID = i});
+                i++;
             }
         }
 
         public int GetNumberOfPhotos()
         {
-            return this.PhotosNames.Count();
+            return this.PhotosInfo.Count();
+        }
+
+        public void RemovePhoto(int photoID)
+        {
+            string photoPath = null;
+            PhotoInfo ph = null;
+            foreach (PhotoInfo photo in PhotosInfo)
+            {
+                if (photo.ID == photoID)
+                {
+                    photoPath = photo.Path;
+                    ph = photo;
+                    break;
+                }
+            }
+
+            // remove from the list
+            if (PhotosInfo.Contains(ph))
+            {
+                PhotosInfo.Remove(ph);
+            }
+
+            // remove from the outputdir
+            if (File.Exists(photoPath))
+            {
+                File.Delete(photoPath);
+            }
         }
     }
 }

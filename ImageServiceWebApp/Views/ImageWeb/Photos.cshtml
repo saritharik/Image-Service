@@ -4,23 +4,26 @@
 }
 
 <h2>Photos</h2>
-@foreach (var photo in Model.PhotosNames)
+@foreach (var photo in Model.PhotosInfo)
 {
-    <li>@photo</li>
     <div class="row">
         <div class="col-xs-6 col-md-3">
-            <a href="#" class="thumbnail">
-                <img src="@photo" class="img-circle" alt="Sample Photo" width="304" height="236">
-            </a>
-            <div class="caption">
-                <p>
-                <a href="#" class="btn btn-primary" role="button">Button</a>
-                <a href="#" class="btn btn-default" role="button">Button</a>
-                </p>
+            <div class="thumbnail">
+                <a href="#"></a>
+                <img src="\OutputDir\Thumbnails\@photo.Year\@photo.Month\@photo.Name"
+                     class="img-circle" alt="Sample Photo" width="304" height="236">
+                <div class="caption">
+                    <h3 style="font-size:medium">@photo.Name</h3>
+                    <p>@photo.Year, @photo.Month</p>
+                </div>
+
+                @Html.ActionLink("View", "ShowPhoto", new { infoID = @photo.ID }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("Delete", "RemovePhoto", new { infoID = @photo.ID }, new { @class = "btn btn-danger" })
+
             </div>
         </div>
     </div>
-    
+
 }
 
 

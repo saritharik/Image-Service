@@ -75,7 +75,7 @@ namespace ImageService.Modal
         private void createFolder()
         {
             DirectoryInfo di = Directory.CreateDirectory(m_OutputFolder);
-            di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+            //di.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
             Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails"); 
         }
 
