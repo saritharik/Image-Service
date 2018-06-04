@@ -1,4 +1,5 @@
 ﻿using ImageServiceWebApp.Models;
+using Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,14 +29,35 @@ namespace ImageServiceWebApp.Controllers
             return View(configModel);
         }
 
-        public ActionResult Logs()
+        public ActionResult Logs(string filterByType)
         {
+            ViewData["CurrentFilter"] = filterByType;
+            if (!String.IsNullOrEmpty(filterByType))
+            {
+                IEnumerable<MessageRecievedEventArgs> temp = logModel.Logs.Where(l => l.Status.ToString().Equals(filterByType));
+                logModel.Logs = temp.ToList();
+            } else
+            {
+                logModel.Logs = logModel.BackupLogs;
+            }
             return View(logModel);
         }
 
         public ActionResult Photos()
         {
             return View(photosModel);
+        }
+
+        public ActionResult RemoveHandler(string SelectedHandler)
+        {
+            return View(configModel);
+        }
+
+        public ActionResult Delete(string SelectedHandler)
+        {
+            configModel.SelectedHandler = SelectedHandler;
+            configModel.RemoveHandlerCommand();
+            return RedirectToAction("Config");
         }
 
         public int CountImages(string OutputDirPath)

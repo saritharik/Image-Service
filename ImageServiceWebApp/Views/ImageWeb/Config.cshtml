@@ -14,7 +14,5 @@
 
 @foreach (var handler in Model.Handlers)
 {
-    <li>@Html.ActionLink(handler, "RemoveHandler", "ImageWeb")</li>
+    <li>@Html.ActionLink(handler, "RemoveHandler", new { SelectedHandler = handler })</li>
 }
-
-<!--Handlers-->

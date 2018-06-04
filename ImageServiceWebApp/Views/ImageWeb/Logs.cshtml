@@ -6,8 +6,31 @@
 
 <h2>Logs</h2>
 
-@foreach (var log in Model.Logs)
-{
-    <li>@log.Message</li>
-}
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Find by TYPE: <input type="text" name="filterByType" value="@ViewData["currentFilter"]" />
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
 
+
+<table class="table">
+    <tr>
+        <th>TYPE</th>
+        <th>Message</th>
+    </tr>
+    @foreach (var log in Model.Logs)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => log.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => log.Message)
+            </td>
+        </tr>
+    }
+</table>

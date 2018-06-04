@@ -5,4 +5,20 @@
 
 <h2>RemoveHandler</h2>
 
+<p>Are you sure you want to remove this folder????</p>
+
+<button type="button" id="btnConfirm" style="margin:10px">OK</button> 
+<button type="button" id="btnCancel" style="margin:10px">Cancel</button>
+
+<script>
+    $("#btnConfirm").click(function () {
+        $.getJSON("@Url.Action("Delete", "ImageWeb")" {
+           
+        });
+    });
+
+    $("#btnCancel").click('#backLink', function () {
+        history.go(-1);
+    });
+</script>
 

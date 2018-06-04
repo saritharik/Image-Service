@@ -18,6 +18,7 @@ namespace ImageServiceWebApp.Models
         {
             this.Handlers = new List<string>();
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
+            ClientCommSingelton.getInstance().DataReceived += GetRemoveMessage;
         }
 
         [Required]
@@ -39,6 +40,11 @@ namespace ImageServiceWebApp.Models
         [DataType(DataType.Text)]
         [Display(Name = "ThumbnailSize")]
         public string ThumbnailSize { get; set; }
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "SelectedHandler")]
+        public string SelectedHandler { get; set; }
 
         [Required]
         [DataType(DataType.MultilineText)]
@@ -67,6 +73,23 @@ namespace ImageServiceWebApp.Models
             foreach (string path in pathes)
             {
                 Handlers.Add(path);
+            }
+        }
+
+
+        public void RemoveHandlerCommand()
+        {
+            ClientCommSingelton.getInstance().sendMessage(SelectedHandler, (int)CommandEnum.CloseCommand);
+        }
+
+        public void GetRemoveMessage(object sender, DataRecivedEventArgs dataArgs)
+        {
+            if (dataArgs.CommandID == (int)CommandEnum.CloseCommand)
+            {
+                if (this.Handlers.Contains(dataArgs.Args))
+                {
+                    this.Handlers.Remove(dataArgs.Args);
+                }
             }
         }
     }
