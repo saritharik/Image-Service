@@ -1,4 +1,6 @@
-﻿using ImageServiceWebApp.Models;
+﻿using Communication;
+using ImageServiceWebApp.communication;
+using ImageServiceWebApp.Models;
 using Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -16,14 +18,20 @@ namespace ImageServiceWebApp.Controllers
         public static LogModel logModel = new LogModel();
         public static PhotosModel photosModel = new PhotosModel();
 
+        public ImageWebController()
+        {
+            ClientCommSingelton.getInstance().DataReceived += GetRemoveMessage;
+        }
+
         // GET: ImageWeb
         [HttpGet]
         public ActionResult Index()
         {
-            //imageWebModel.NumberPictuers = CountImages(configModel.OutputDirectory);
+            
             return View(imageWebModel);
         }
 
+        [HttpGet]
         public ActionResult Config()
         {
             return View(configModel);
@@ -50,13 +58,31 @@ namespace ImageServiceWebApp.Controllers
 
         public ActionResult RemoveHandler(string SelectedHandler)
         {
+            configModel.SelectedHandler = SelectedHandler;
             return View(configModel);
         }
 
         public ActionResult Delete(string SelectedHandler)
         {
-            configModel.SelectedHandler = SelectedHandler;
             configModel.RemoveHandlerCommand();
+            configModel.SelectedHandler = null;
+            return View(configModel);
+        }
+
+        public void GetRemoveMessage(object sender, DataRecivedEventArgs dataArgs)
+        {
+            if (dataArgs.CommandID == (int)CommandEnum.CloseCommand)
+            {
+                if (configModel.Handlers.Contains(dataArgs.Args))
+                {
+                    configModel.Handlers.Remove(dataArgs.Args);
+                    Remove();
+                }
+            }
+        }
+
+        public ActionResult Remove()
+        {
             return RedirectToAction("Config");
         }
 

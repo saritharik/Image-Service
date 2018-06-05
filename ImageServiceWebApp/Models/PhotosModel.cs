@@ -31,7 +31,7 @@ namespace ImageServiceWebApp.Models
             if (dataArgs.CommandID == (int)CommandEnum.GetConfigCommand)
             {
                 FromJson(dataArgs.Args);
-                ClientCommSingelton.getInstance().sendMessage("succeeded", (int)CommandEnum.GetConfigCommand);
+                //ClientCommSingelton.getInstance().sendMessage("succeeded", (int)CommandEnum.GetConfigCommand);
                 GetPhotos(outputDir);
             }
         }

@@ -18,7 +18,6 @@ namespace ImageServiceWebApp.Models
         {
             this.Handlers = new List<string>();
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
-            ClientCommSingelton.getInstance().DataReceived += GetRemoveMessage;
         }
 
         [Required]
@@ -72,7 +71,10 @@ namespace ImageServiceWebApp.Models
             string[] pathes = directories.Split(';');
             foreach (string path in pathes)
             {
-                Handlers.Add(path);
+                if (path != "")
+                {
+                    Handlers.Add(path);
+                }
             }
         }
 
@@ -80,17 +82,6 @@ namespace ImageServiceWebApp.Models
         public void RemoveHandlerCommand()
         {
             ClientCommSingelton.getInstance().sendMessage(SelectedHandler, (int)CommandEnum.CloseCommand);
-        }
-
-        public void GetRemoveMessage(object sender, DataRecivedEventArgs dataArgs)
-        {
-            if (dataArgs.CommandID == (int)CommandEnum.CloseCommand)
-            {
-                if (this.Handlers.Contains(dataArgs.Args))
-                {
-                    this.Handlers.Remove(dataArgs.Args);
-                }
-            }
         }
     }
 }

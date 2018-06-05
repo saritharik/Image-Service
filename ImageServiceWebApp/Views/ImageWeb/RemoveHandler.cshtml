@@ -1,4 +1,4 @@
-﻿
+﻿@model ImageServiceWebApp.Models.ConfigModel
 @{
     ViewBag.Title = "RemoveHandler";
 }
@@ -7,13 +7,30 @@
 
 <p>Are you sure you want to remove this folder????</p>
 
-<button type="button" id="btnConfirm" style="margin:10px">OK</button> 
-<button type="button" id="btnCancel" style="margin:10px">Cancel</button>
+<button type="button" id="btnConfirm" class="btn-danger" onclick="disable()" style="margin:10px">OK</button>
+<button type="button" id="btnCancel" class="alert-info" style="margin:10px">Cancel</button>
 
 <script>
-    
+
     $("#btnCancel").click('#backLink', function () {
         history.go(-1);
     });
 </script>
+
+<script>
+    $("#btnConfirm").click(function () {
+        var input = {
+            handler:$("#@Model.SelectedHandler").val()
+        };
+        $.post("@Url.Action("Delete")", input)
+    });
+</script>
+
+<script>
+    function disable() {
+        document.getElementById("btnConfirm").disabled = true;
+        document.getElementById("btnCancel").disabled = true;
+    }
+</script>
+
 
