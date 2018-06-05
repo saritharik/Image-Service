@@ -19,6 +19,7 @@ namespace ImageServiceWebApp.Models
         {
             PhotosInfo = new List<PhotoInfo>();
             ClientCommSingelton.getInstance().DataReceived += GetNameOutputDir;
+
         }
 
         [Required]
@@ -31,7 +32,6 @@ namespace ImageServiceWebApp.Models
             if (dataArgs.CommandID == (int)CommandEnum.GetConfigCommand)
             {
                 FromJson(dataArgs.Args);
-                //ClientCommSingelton.getInstance().sendMessage("succeeded", (int)CommandEnum.GetConfigCommand);
                 GetPhotos(outputDir);
             }
         }
@@ -50,9 +50,10 @@ namespace ImageServiceWebApp.Models
             {
                 String[] split = filename.Split('\\');
                 int length = split.Length;
-                this.PhotosInfo.Add(new PhotoInfo { Path = filename, Month = Int32.Parse(split[length - 2]),
+                String[] output = outputDir.Split('\\');
+                this.PhotosInfo.Add(new PhotoInfo { FullPath = filename, Month = Int32.Parse(split[length - 2]),
                     Year = Int32.Parse(split[length - 3]),
-                    Name = split[length - 1], ID = i});
+                    Name = split[length - 1], ID = i, Directory = output[output.Length - 1]});
                 i++;
             }
         }
@@ -70,7 +71,7 @@ namespace ImageServiceWebApp.Models
             {
                 if (photo.ID == photoID)
                 {
-                    photoPath = photo.Path;
+                    photoPath = photo.FullPath;
                     ph = photo;
                     break;
                 }

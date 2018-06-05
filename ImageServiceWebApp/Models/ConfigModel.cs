@@ -18,6 +18,8 @@ namespace ImageServiceWebApp.Models
         {
             this.Handlers = new List<string>();
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
+            //this.GetMessage(ClientCommSingelton.getInstance().receiveMessage());
+            //ClientCommSingelton.getInstance().send("succeeded", (int)CommandEnum.GetConfigCommand);
         }
 
         [Required]
