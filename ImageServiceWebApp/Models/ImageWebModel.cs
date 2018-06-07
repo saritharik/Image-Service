@@ -12,6 +12,9 @@ namespace ImageServiceWebApp.Models
 {
     public class ImageWebModel
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public ImageWebModel()
         {
             photosModel = new PhotosModel();
@@ -24,6 +27,9 @@ namespace ImageServiceWebApp.Models
             };
         }
 
+        /// <summary>
+        /// NumberPictuers
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "NumberPictuers")]
@@ -33,17 +39,27 @@ namespace ImageServiceWebApp.Models
             set { this.photosModel.GetNumberOfPhotos(); }
         }
 
+        /// <summary>
+        /// ServerConnected
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "ServerConnected")]
         public string ServerConnected = ConnectedServer();
 
+        /// <summary>
+        /// photosModel
+        /// </summary>
         [Required]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Students")]
         public List<StudentsInfo> Students { get; set; }
         private PhotosModel photosModel;
 
+        /// <summary>
+        /// Check if server connected.
+        /// </summary>
+        /// <returns></returns>
         public static string ConnectedServer()
         {
             if(ClientCommSingelton.getInstance().Connected)
@@ -54,14 +70,5 @@ namespace ImageServiceWebApp.Models
                 return "Service Unconnected";
             }
         }
-
-       /* public static void UpdateOutputDir(object sender, DataRecivedEventArgs dataArgs)
-        {
-            if (dataArgs.CommandID == (int)CommandEnum.GetConfigCommand)
-            {
-                JObject configObj = JsonConvert.DeserializeObject<JObject>(dataArgs.Args);
-                outputDir = (string)configObj["OutputDir"];
-            }
-        }*/
     }
 }

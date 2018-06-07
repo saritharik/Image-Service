@@ -15,6 +15,10 @@ namespace ImageServiceWebApp.Models
     public class PhotosModel
     {
         private string outputDir;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public PhotosModel()
         {
             PhotosInfo = new List<PhotoInfo>();
@@ -22,11 +26,19 @@ namespace ImageServiceWebApp.Models
 
         }
 
+        /// <summary>
+        /// PhotosInfo list.
+        /// </summary>
         [Required]
         [DataType(DataType.MultilineText)]
         [Display(Name = "PhotosInfo")]
         public List<PhotoInfo> PhotosInfo { get ; set; }
 
+        /// <summary>
+        /// This function activated when the client get data from server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="dataArgs">Data arguments.</param>
         public void GetNameOutputDir(object sender, DataRecivedEventArgs dataArgs)
         {
             if (dataArgs.CommandID == (int)CommandEnum.GetConfigCommand)
@@ -36,12 +48,20 @@ namespace ImageServiceWebApp.Models
             }
         }
 
+        /// <summary>
+        /// Convert data with json.
+        /// </summary>
+        /// <param name="data">to convert</param>
         public void FromJson(string data)
         {
             JObject configObj = JsonConvert.DeserializeObject<JObject>(data);
             this.outputDir = (string)configObj["OutputDir"];
         }
 
+        /// <summary>
+        /// Get list of photos from directory.
+        /// </summary>
+        /// <param name="directory"></param>
         public void GetPhotos(string directory)
         {
             var files = Directory.GetFiles(directory + "\\" + "Thumbnails", "*.*", SearchOption.AllDirectories);
@@ -58,11 +78,19 @@ namespace ImageServiceWebApp.Models
             }
         }
 
+        /// <summary>
+        /// Return the number of photos in directory.
+        /// </summary>
+        /// <returns>number of photos in directory</returns>
         public int GetNumberOfPhotos()
         {
             return this.PhotosInfo.Count();
         }
 
+        /// <summary>
+        /// Remove photo by id.
+        /// </summary>
+        /// <param name="photoID">photo's id</param>
         public void RemovePhoto(int photoID)
         {
             string photoPath = null;

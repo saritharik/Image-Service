@@ -14,44 +14,68 @@ namespace ImageServiceWebApp.Models
 {
     public class ConfigModel
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public ConfigModel()
         {
             this.Handlers = new List<string>();
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
-            //this.GetMessage(ClientCommSingelton.getInstance().receiveMessage());
-            //ClientCommSingelton.getInstance().send("succeeded", (int)CommandEnum.GetConfigCommand);
         }
 
+        /// <summary>
+        /// OutputDirectory
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "OutputDirectory")]
         public string OutputDirectory { get; set; }
 
+        /// <summary>
+        /// SourceName
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "SourceName")]
         public string SourceName { get; set; }
 
+        /// <summary>
+        /// LogName
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "LogName")]
         public string LogName { get; set; }
 
+        /// <summary>
+        /// ThumbnailSize
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "ThumbnailSize")]
         public string ThumbnailSize { get; set; }
 
+        /// <summary>
+        /// SelectedHandler
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "SelectedHandler")]
         public string SelectedHandler { get; set; }
 
+        /// <summary>
+        /// Handlers
+        /// </summary>
         [Required]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Handlers")]
         public List<string> Handlers { get; set; }
 
+        /// <summary>
+        /// This function activated when the client get data from server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="dataArgs">Data arguments.</param>
         public void GetMessage(object sender, DataRecivedEventArgs dataArgs)
         {
             if (dataArgs.CommandID == (int)CommandEnum.GetConfigCommand)
@@ -61,6 +85,10 @@ namespace ImageServiceWebApp.Models
             }
         }
 
+        /// <summary>
+        /// Convert message with json.
+        /// </summary>
+        /// <param name="data">to convert</param>
         public void FromJson(string data)
         {
             JObject configObj = JsonConvert.DeserializeObject<JObject>(data);
@@ -80,7 +108,9 @@ namespace ImageServiceWebApp.Models
             }
         }
 
-
+        /// <summary>
+        /// Remove Handler.
+        /// </summary>
         public void RemoveHandlerCommand()
         {
             ClientCommSingelton.getInstance().sendMessage(SelectedHandler, (int)CommandEnum.CloseCommand);

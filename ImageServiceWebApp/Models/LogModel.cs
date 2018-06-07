@@ -12,24 +12,34 @@ namespace ImageServiceWebApp.Models
 {
     public class LogModel
     {
+        /// <summary>
+        /// Constructor.
+        /// </summary>
         public LogModel()
         {
             this.Logs = new List<MessageRecievedEventArgs>();
             this.BackupLogs = new List<MessageRecievedEventArgs>();
-            BackupLogs.Add(new MessageRecievedEventArgs(MessageTypeEnum.INFO, "example"));
-            BackupLogs.Add(new MessageRecievedEventArgs(MessageTypeEnum.FAIL, "example2"));
-            Logs.Add(new MessageRecievedEventArgs(MessageTypeEnum.INFO, "example"));
-            Logs.Add(new MessageRecievedEventArgs(MessageTypeEnum.FAIL, "example2"));
             ClientCommSingelton.getInstance().DataReceived += GetMessage;
         }
 
+        /// <summary>
+        /// Logs list.
+        /// </summary>
         [Required]
         [DataType(DataType.MultilineText)]
         [Display(Name = "Logs")]
         public List<MessageRecievedEventArgs> Logs { get; set; }
 
+        /// <summary>
+        /// BackupLogs list.
+        /// </summary>
         public List<MessageRecievedEventArgs> BackupLogs { get; set; }
 
+        /// <summary>
+        /// This function activated when the client get data from server.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="dataArgs">Data arguments.</param>
         public void GetMessage(object sender, DataRecivedEventArgs dataArgs)
         {
             if (dataArgs.CommandID == (int)CommandEnum.LogCommand)
@@ -41,6 +51,11 @@ namespace ImageServiceWebApp.Models
             }
         }
 
+        /// <summary>
+        /// Convert message to MessageRecievedEventArgs with json.
+        /// </summary>
+        /// <param name="args">to convert</param>
+        /// <returns>MessageRecievedEventArgs</returns>
         public MessageRecievedEventArgs FromJson(string args)
         {
             MessageTypeEnum messageType = MessageTypeEnum.INFO;

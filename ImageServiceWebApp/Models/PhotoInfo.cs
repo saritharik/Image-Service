@@ -7,16 +7,18 @@ namespace ImageServiceWebApp.Models
 {
     public class PhotoInfo
     {
+        #region Properties
         public string FullPath { get; set; }
         public string Name { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
         public int ID { get; set; }
         public string Directory { get; set; }
+        #endregion
 
-        public PhotoInfo()
-        {
-
-        }
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public PhotoInfo(){}
     }
 }

@@ -4,14 +4,13 @@
     ViewBag.Title = "Logs";
 }
 
-<h2>Logs</h2>
+<h2 style="color:greenyellow">Logs</h2>
 
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
             Find by TYPE: <input type="text" name="filterByType" value="@ViewData["currentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-default" /> |
-            <a asp-action="Index">Back to Full List</a>
+            <input type="submit" value="Search" class="btn btn-default" />
         </p>
     </div>
 </form>

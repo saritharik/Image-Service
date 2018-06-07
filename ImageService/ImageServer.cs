@@ -84,6 +84,7 @@ namespace ImageService.Server
                         clients.Add(client);
                         Console.WriteLine("Got new connection");
                         Thread.Sleep(500);
+
                         SendConfig(client);
                         ServerCommSingelton.getInstance().receiveMessage(client);
                         foreach (MessageRecievedEventArgs msg in logMessages)

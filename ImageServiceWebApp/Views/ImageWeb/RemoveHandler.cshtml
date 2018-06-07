@@ -3,9 +3,7 @@
     ViewBag.Title = "RemoveHandler";
 }
 
-<h2>RemoveHandler</h2>
-
-<p>Are you sure you want to remove this folder????</p>
+<h2 style="color:red">Are you sure you want to remove this directory?</h2>
 
 <button type="button" id="btnConfirm" class="btn-danger" onclick="disable()" style="margin:10px">OK</button>
 <button type="button" id="btnCancel" class="alert-info" style="margin:10px">Cancel</button>
@@ -23,6 +21,10 @@
             handler:$("#@Model.SelectedHandler").val()
         };
         $.post("@Url.Action("Delete")", input)
+
+        window.location.href = "Config";
+
+        
     });
 </script>
 

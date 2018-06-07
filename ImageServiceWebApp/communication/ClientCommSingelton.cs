@@ -25,13 +25,12 @@ namespace ImageServiceWebApp.communication
 
         // DateReceived event.
         public event EventHandler<DataRecivedEventArgs> DataReceived;
-        Mutex mut = new Mutex();
+
         /// <summary>
         /// Private constructor - to singelton class.
         /// </summary>
         private ClientCommSingelton()
         {
-            mut = new Mutex();
             IPEndPoint ep = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 8000);
             this.client = new TcpClient();
             try
@@ -50,9 +49,7 @@ namespace ImageServiceWebApp.communication
                     {
                         try
                         {
-                            //mut.WaitOne();
                             string data = reader.ReadString();
-                            //mut.ReleaseMutex();
                             string result = receiveMessage(data);
                         }
                         catch (Exception e)
@@ -90,10 +87,8 @@ namespace ImageServiceWebApp.communication
         /// <param name="id">the id of the command</param>
         public void sendMessage(string message, int id)
         {
-            //mut.WaitOne();
             writer.Write(ToJson(id, message));
             writer.Flush();
-            //mut.ReleaseMutex();
         }
 
         /// <summary>

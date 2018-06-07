@@ -9,20 +9,30 @@ namespace ImageServiceWebApp.Models
 {
     public class StudentsInfo
     {
-        public StudentsInfo()
-        {
-        }
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        public StudentsInfo() {}
 
+        /// <summary>
+        /// ID.
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "ID")]
         public string ID { get; set; }
 
+        /// <summary>
+        /// FirstName.
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "FirstName")]
         public string FirstName { get; set; }
 
+        /// <summary>
+        /// LastName.
+        /// </summary>
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "LastName")]
