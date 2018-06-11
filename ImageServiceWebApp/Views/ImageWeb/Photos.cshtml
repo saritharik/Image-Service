@@ -14,7 +14,7 @@
                      class="img-circle" alt="Sample Photo" width="304" height="236">
                 <div class="caption">
                     <h3 style="font-size:medium">@photo.Name</h3>
-                    <p>@photo.Year, @photo.Month</p>
+                    <p>@photo.Month, @photo.Year</p>
                 </div>
 
                 @Html.ActionLink("View", "ShowPhoto", new { infoID = @photo.ID }, new { @class = "btn btn-primary" })

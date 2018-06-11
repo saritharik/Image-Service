@@ -16,9 +16,9 @@ namespace ImageServiceWebApp.Controllers
     {
         #region members
         public static ConfigModel configModel = new ConfigModel();
-        public static ImageWebModel imageWebModel = new ImageWebModel();
-        public static LogModel logModel = new LogModel();
         public static PhotosModel photosModel = new PhotosModel();
+        public static ImageWebModel imageWebModel = new ImageWebModel(photosModel);
+        public static LogModel logModel = new LogModel();
         public static bool remove = false;
         #endregion
 
@@ -28,6 +28,7 @@ namespace ImageServiceWebApp.Controllers
         public ImageWebController()
         {
             ClientCommSingelton.getInstance().DataReceived += GetRemoveMessage;
+            imageWebModel.NumberPictuers = photosModel.GetNumberOfPhotos();
         }
 
         /// <summary>
@@ -38,7 +39,10 @@ namespace ImageServiceWebApp.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            Thread.Sleep(500);
+            if (imageWebModel.NumberPictuers == 0)
+            {
+                Thread.Sleep(1000);
+            }
             return View(imageWebModel);
         }
 

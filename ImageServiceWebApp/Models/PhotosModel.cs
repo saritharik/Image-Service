@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Web;
 
 namespace ImageServiceWebApp.Models
@@ -15,13 +16,14 @@ namespace ImageServiceWebApp.Models
     public class PhotosModel
     {
         private string outputDir;
-
+        private bool getData;
         /// <summary>
         /// Constructor.
         /// </summary>
         public PhotosModel()
         {
             PhotosInfo = new List<PhotoInfo>();
+            getData = false;
             ClientCommSingelton.getInstance().DataReceived += GetNameOutputDir;
 
         }
@@ -111,10 +113,17 @@ namespace ImageServiceWebApp.Models
                 PhotosInfo.Remove(ph);
             }
 
+            string path = this.outputDir + "\\" + ph.Year + "\\" + ph.Month + "\\" + ph.Name;
+
             // remove from the outputdir
             if (File.Exists(photoPath))
             {
                 File.Delete(photoPath);
+            }
+
+            if (File.Exists(path))
+            {
+                File.Delete(path);
             }
         }
     }

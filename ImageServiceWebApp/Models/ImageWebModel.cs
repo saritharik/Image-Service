@@ -15,18 +15,20 @@ namespace ImageServiceWebApp.Models
         /// <summary>
         /// Constructor.
         /// </summary>
-        public ImageWebModel()
+        public ImageWebModel(PhotosModel photosModel)
         {
-            photosModel = new PhotosModel();
+            this.photosModel = photosModel;
+            getNumPic = false;
             string[] studentsInfo = 
                 System.IO.File.ReadAllLines(HostingEnvironment.MapPath(@"~/App_Data/InfoStudents.txt"));
             this.Students = new List<StudentsInfo>()
             {
-                new StudentsInfo {ID = studentsInfo[0] , LastName  = studentsInfo[1], FirstName = studentsInfo[2]},
-                new StudentsInfo {ID = studentsInfo[3] , LastName  = studentsInfo[4], FirstName = studentsInfo[5]}
+                new StudentsInfo {ID = studentsInfo[0] , LastName = studentsInfo[1], FirstName = studentsInfo[2]},
+                new StudentsInfo {ID = studentsInfo[3] , LastName = studentsInfo[4], FirstName = studentsInfo[5]}
             };
         }
 
+        private bool getNumPic;
         /// <summary>
         /// NumberPictuers
         /// </summary>
@@ -36,7 +38,7 @@ namespace ImageServiceWebApp.Models
         public int NumberPictuers
         {
             get { return this.photosModel.GetNumberOfPhotos(); }
-            set { this.photosModel.GetNumberOfPhotos(); }
+            set {; }//this.photosModel.GetNumberOfPhotos(); }
         }
 
         /// <summary>
