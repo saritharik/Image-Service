@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="communication\ServerCommSingelton.cs" />
+    <Compile Include="communication\TcpServerAndroid.cs" />
     <Compile Include="DirectoryCloseEventArgs.cs" />
     <Compile Include="DirectoryHandler.cs" />
     <Compile Include="ICommand.cs" />
@@ -63,8 +64,6 @@
     <Compile Include="ILoggingService.cs" />
     <Compile Include="ImageController.cs" />
     <Compile Include="ImageServer.cs" />
-    <Compile Include="communication\ClientHandler.cs" />
-    <Compile Include="communication\IClientHandler.cs" />
     <Compile Include="ImageService.cs">
       <SubType>Component</SubType>
     </Compile>

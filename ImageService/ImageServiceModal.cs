@@ -52,13 +52,20 @@ namespace ImageService.Modal
                 // create the dest folder
                 createFolder();
                 m_logging.Log("Folder create successfully", MessageTypeEnum.INFO);
-                DateTime dateTime = getDateFromImage(path);
+                DateTime dateTime;
+                try
+                {
+                    dateTime = getDateFromImage(path);
+                } catch(Exception e)
+                {
+                    dateTime = DateTime.Now;
+                }
                 m_logging.Log("Get date time successfully", MessageTypeEnum.INFO);
-                // move the picture to the dest folder
-                res = movePicture(path, dateTime);
+                res = movePicture(path, dateTime.Year, dateTime.Month);
                 m_logging.Log("Picture move successfully", MessageTypeEnum.INFO);
             } catch (Exception e)
             {
+               
                 // If an error occurred while moving the image - update the logger
                 m_logging.Log("Move picture fail", MessageTypeEnum.FAIL);
                 res = e.ToString();
@@ -102,22 +109,20 @@ namespace ImageService.Modal
         /// <param name="path"></param> the destination path
         /// <param name="dateTime"></param> the date and time of the creation of the picture.
         /// <returns></returns> return the new path if the move succeed, and error message otherwise.
-        private String movePicture(string path, DateTime dateTime)
+        private String movePicture(string path, int picYear, int picMonth)
         {
             int i = 1;
-            int year = dateTime.Year;
-            int month = dateTime.Month;
+            int year = picYear;
+            int month = picMonth;
             Directory.CreateDirectory(m_OutputFolder + "\\" + year);
             Directory.CreateDirectory(m_OutputFolder + "\\" + year + "\\" + month);
-            while (File.Exists(m_OutputFolder + "\\" + year + "\\" + month + "\\" + Path.GetFileName(path))) {
-                string newName = Path.GetFileNameWithoutExtension(path);
-                string newPath = path.Replace(newName, newName + "(" + i + ")");
-                File.Move(path, newPath);
-                path = newPath;
-                i++;
+            if (File.Exists(m_OutputFolder + "\\" + year + "\\" + month + "\\" + Path.GetFileName(path))) {
+                File.Delete(m_OutputFolder + "\\" + year + "\\" + month + "\\" + Path.GetFileName(path));
             }
             string fileName = Path.GetFileName(path);
+            Thread.Sleep(1000);
             File.Move(path, m_OutputFolder + "\\" + year + "\\" + month + "\\" + fileName);
+            
             Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails" + "\\" + year);
             Directory.CreateDirectory(m_OutputFolder + "\\" + "Thumbnails" + "\\" + year + "\\" + month);
             createThumbnails(m_OutputFolder + "\\" + year + "\\" + month + "\\" + fileName,

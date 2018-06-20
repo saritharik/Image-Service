@@ -14,6 +14,7 @@ using ImageService.Modal;
 using ImageService.Logging;
 using System.Configuration;
 using Infrastructure;
+using ImageService.communication;
 
 namespace ImageService
 {
@@ -44,6 +45,7 @@ namespace ImageService
     {
         private ImageServer m_imageServer;          // The Image Server
         private ILoggingService logging;
+        private TcpServerAndroid androidServer;
 
         private int eventId = 1;
         [DllImport("advapi32.dll", SetLastError = true)]
@@ -72,6 +74,7 @@ namespace ImageService
             logging = new LoggingService();
             logging.MessageRecieved += onMsg;
             m_imageServer = new ImageServer(logging);
+            androidServer = new TcpServerAndroid();
         }
 
         // Here You will Use the App Config!
